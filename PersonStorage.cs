@@ -24,16 +24,27 @@
         public void AddPersons(Person[] persons)
         {
             var oldSize = _persons.Length;
-            var newSize = oldSize * 2;
-            if (oldSize == 0)
-            {
-                newSize = persons.Length;
-            }
-            Array.Resize(ref _persons, newSize);
+
+            ResizeArray(persons.Length);
             for (int i = 0; i < persons.Length; i++)
             {
                 _persons[oldSize + i] = persons[i];
             }
+        }
+
+        public void ResizeArray(int length)
+        {
+            if (_persons.Length == 0)
+            {
+                Array.Resize(ref _persons, length);
+                return;
+            }
+            int currentSize;
+            do
+            {
+                currentSize = _persons.Length;
+                Array.Resize(ref _persons, currentSize * 2);
+            } while (_persons.Length < currentSize + length);
         }
 
         public bool DeletePersonById(Guid deletedPersonId)
