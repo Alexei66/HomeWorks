@@ -7,12 +7,12 @@
         private int age;
         private Guid id = Guid.NewGuid();
 
-        public string Name => this.name;
-        public string LastName => this.lastName;
+        public string Name { get; set; }
+        public string LastName { get; set; }
 
-        public int Age => this.age;
+        public int Age { get; set; }
 
-        public Guid Id => this.id;
+        public Guid Id { get; set; }
 
         public DateTime DateCreation => DateTime.Now;
 
