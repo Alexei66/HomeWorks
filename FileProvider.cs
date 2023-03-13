@@ -16,7 +16,7 @@ namespace Person
             
         }
 
-        public void ReadingFromFile(string filePath)
+        public Person[]? ReadingFromFile(string filePath)
         {
 
             return JsonConvert.DeserializeObject<Person[]>(File.ReadAllText(filePath));
