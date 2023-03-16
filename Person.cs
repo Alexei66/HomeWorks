@@ -6,6 +6,7 @@
         private string lastName;
         private int age;
         private Guid id = Guid.NewGuid();
+        private string dateCreation = DateTime.Now.ToString("MM/dd/yyyy H:mm");
 
         public string Name
         {
@@ -54,11 +55,22 @@
             }
         }
 
-        public DateTime DateCreation => DateTime.Now;
+        public string DateCreation
+        {
+            get
+            {
+                return dateCreation;
+            }
+            set
+            {
+                dateCreation = value;
+            }
+        }
+        
 
         public string Print()
         {
-            return $"{this.id}. Привет, меня зовут {this.lastName} {this.name}. Мне {this.age} лет. Сейчас {DateCreation}  ";
+            return $"{this.id}. Привет, меня зовут {this.lastName} {this.name}. Мне {this.age} лет. Время записи {this.dateCreation}  ";
         }
 
         public Person(Guid id, string name, string lastName, int age) : this()

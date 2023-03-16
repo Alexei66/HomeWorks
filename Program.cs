@@ -32,20 +32,20 @@ namespace Person
             //var test = System.Text.Json.JsonSerializer.Deserialize<Person[]>(json);
             //Console.WriteLine(test);
 
-            //var save = new FileProvider();
+            var save = new FileProvider();
 
-            //save.SavePersonsInFile(arrPers);
+            save.SavePersonsInFile(arrPers);
 
 
 
-            FileProvider read = new FileProvider();
-            Person[]? readJson =read.ReadingFromFile("DocumentPersons.json");
+            //FileProvider read = new FileProvider();
+            //Person[]? readJson =read.ReadingFromFile("DocumentPersons.json");
 
-            foreach (var item in readJson)
-            {
-                Console.WriteLine(item.Print());
-            }
-            
+            //foreach (var item in readJson)
+            //{
+            //    Console.WriteLine(item.Print());
+            //}
+
 
             /*
              [

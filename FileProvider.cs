@@ -12,7 +12,8 @@ namespace Person
         public void SavePersonsInFile(Person[] persons)
         {
                         
-                File.AppendAllText("DocumentPersons.json", JsonConvert.SerializeObject(persons));               
+            File.WriteAllText("DocumentPersons.json", JsonConvert.SerializeObject(persons));   
+            //var serializePersons = JsonConvert.SerializeObject(persons);
             
         }
 
