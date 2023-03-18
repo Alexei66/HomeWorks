@@ -21,30 +21,49 @@ namespace Person
             };
 
 
-            //string json = System.Text.Json.JsonSerializer.Serialize<Person[]>(arrPers);
-            //Console.WriteLine(json);
-            //Console.WriteLine( );
 
-            //string JsonObj = JsonConvert.SerializeObject(arrPers);
-            //Console.WriteLine(JsonObj);
-            //var JsonObject = JsonConvert.DeserializeObject(JsonObj);
-            //Console.WriteLine(JsonObject);
-            //var test = System.Text.Json.JsonSerializer.Deserialize<Person[]>(json);
-            //Console.WriteLine(test);
+            
 
-            var save = new FileProvider();
+            //var save = new FileProvider();
 
-            save.SavePersonsInFile(arrPers);
+            //save.SavePersonsInFile(arrPers, "DocumentPersons.json");
 
 
 
-            //FileProvider read = new FileProvider();
-            //Person[]? readJson =read.ReadingFromFile("DocumentPersons.json");
+            FileProvider read = new FileProvider();
+            Person[]? readJson = read.ReadingFromFile("DocumentPersons.json");
 
-            //foreach (var item in readJson)
-            //{
-            //    Console.WriteLine(item.Print());
-            //}
+            foreach (var item in readJson)
+            {
+                Console.WriteLine(item.Print());
+            }
+
+            Console.ReadKey();
+
+            Guid personGuid = eb19bf39 - 9fbf - 4093 - b151 - 8207435cb998;
+
+            string guis = Convert.ToString();
+
+            PersonStorage.DeletePersonById(personGuid);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             /*
