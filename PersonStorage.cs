@@ -2,7 +2,7 @@
 {
     public struct PersonStorage
     {
-        private Person[] _persons;
+        public Person[] _persons;
 
         public PersonStorage()
         {
@@ -107,6 +107,17 @@
         {
             _persons = Array.FindAll(_persons, x => x.Id != Guid.Empty);
             return _persons;
+        }
+
+        public void SortByDate()
+        {
+            Array.Sort(_persons, sortByDate);
+                
+        }
+
+        private int sortByDate(Person x, Person y)
+        {
+            return x.DateCreation < y.DateCreation ? -1 : x.DateCreation == y.DateCreation ? 0 : 1;
         }
     }
 }

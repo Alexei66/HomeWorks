@@ -19,37 +19,42 @@ namespace Person
                 new Person(Guid.NewGuid(),"Имя7", "Фамилия7", 7),
                 new Person(Guid.NewGuid(),"Имя8", "Фамилия8", 8),
             };
-
-
-
+                        
             
-
             //var save = new FileProvider();
 
             //save.SavePersonsInFile(arrPers, "DocumentPersons.json");
 
 
 
-            FileProvider read = new FileProvider();
-            Person[]? readJson = read.ReadingFromFile("DocumentPersons.json");
+            //FileProvider read = new FileProvider();
+            //Person[]? readJson = read.ReadingFromFile("DocumentPersons.json");
 
-            foreach (var item in readJson)
+            foreach (var item in arrPers)
             {
                 Console.WriteLine(item.Print());
             }
 
-            Console.ReadKey();
+            Console.WriteLine();
 
-            Guid personGuid = eb19bf39 - 9fbf - 4093 - b151 - 8207435cb998;
+            PersonStorage sort = new PersonStorage();
+            sort.SortByDate();
+            Console.WriteLine();
 
-            string guis = Convert.ToString();
+            foreach (var item in arrPers)
+            {
+                Console.WriteLine(item.Print());
+            }
 
-            PersonStorage.DeletePersonById(personGuid);
+            //del.DeletePersonById(Guid.Parse("77e2f0d1-6242-41f2-bc83-7e77a98f5307"));
 
+            //Console.WriteLine();
+            //Console.WriteLine();
 
-
-
-
+            //foreach (var item in readJson)
+            //{
+            //    Console.WriteLine(item.Print());
+            //}
 
 
 
