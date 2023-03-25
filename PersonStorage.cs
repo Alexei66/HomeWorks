@@ -31,6 +31,22 @@
                 _persons[oldSize + i] = persons[i];
             }
         }
+        public void AddPersonsFromFile(string path)
+        {
+
+            FileProvider rp = new FileProvider();
+
+            Person[] persons = rp.ReadingFromFile(path);
+
+
+            var oldSize = _persons.Length;
+
+            ResizeArray(persons.Length);
+            for (int i = 0; i < persons.Length; i++)
+            {
+                _persons[oldSize + i] = persons[i];
+            }
+        }
 
         public void ResizeArray(int length)
         {

@@ -37,8 +37,8 @@ namespace Person
 
             Console.WriteLine();
 
-            PersonStorage sort = new PersonStorage();
-            sort.SortByDate();
+            PersonStorage pr = new PersonStorage();
+            pr.SortByDate();
             Console.WriteLine();
 
             foreach (var item in arrPers)
