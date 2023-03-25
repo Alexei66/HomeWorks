@@ -2,7 +2,7 @@
 {
     public struct PersonStorage
     {
-        public Person[] _persons;
+        private Person[] _persons;
 
         public PersonStorage()
         {
@@ -31,22 +31,7 @@
                 _persons[oldSize + i] = persons[i];
             }
         }
-        public void AddPersonsFromFile(string path)
-        {
-
-            FileProvider rp = new FileProvider();
-
-            Person[] persons = rp.ReadingFromFile(path);
-
-
-            var oldSize = _persons.Length;
-
-            ResizeArray(persons.Length);
-            for (int i = 0; i < persons.Length; i++)
-            {
-                _persons[oldSize + i] = persons[i];
-            }
-        }
+       
 
         public void ResizeArray(int length)
         {
@@ -127,11 +112,11 @@
 
         public void SortByDate()
         {
-            Array.Sort(_persons, sortByDate);
+            Array.Sort(_persons, SortDate);
                 
         }
 
-        private int sortByDate(Person x, Person y)
+        private int SortDate(Person x, Person y)
         {
             return x.DateCreation < y.DateCreation ? -1 : x.DateCreation == y.DateCreation ? 0 : 1;
         }

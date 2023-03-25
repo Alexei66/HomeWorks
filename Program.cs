@@ -9,6 +9,9 @@ namespace Person
     {
         private static void Main(string[] args)
         {
+
+            PersonStorage pr = new PersonStorage();
+
             Person[] arrPers = new Person[]
             {
                 new Person(Guid.NewGuid(),"Имя2", "Фамилия2", 2),
@@ -37,7 +40,7 @@ namespace Person
 
             Console.WriteLine();
 
-            PersonStorage pr = new PersonStorage();
+            
             pr.SortByDate();
             Console.WriteLine();
 
@@ -57,60 +60,6 @@ namespace Person
             //}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            /*
-             [
-               {
-                 "Name": "Имя1",
-                 "LastName": "Фамилия1",
-                 "Age": 1,
-                 "Id": "17f33b1c-6f86-483f-b377-dcfaefeb804b"
-             
-               },
-               {
-                 "Name": "Имя2",
-                 "LastName": "Фамилия2",
-                 "Age": 2,
-                 "Id": "01a07826-fca2-487b-88d7-adb32cc2ea0d"
-             
-               },
-               {
-                 "Name": "Имя3",
-                 "LastName": "Фамилия3",
-                 "Age": 3,
-                 "Id": "c4518093-93cf-47cd-9f5a-1c304319bb37"
-             
-               },
-               {
-                 "Name": "Имя4",
-                 "LastName": "Фамилия4",
-                 "Age": 4,
-                 "Id": "a9006c09-684d-4279-8338-f266cd8dc8c8"
-             
-               },
-               {
-                 "Name": "Имя5",
-                 "LastName": "Фамилия5",
-                 "Age": 5,
-                 "Id": "1274fd77-180a-414c-8b2b-24853da00631"
-             
-               }              
-               
-             ]
-             */
 
         }
     }

@@ -7,7 +7,7 @@
         private string lastName;
         private int age;
         private Guid id = Guid.NewGuid();
-        private DateTime dateCreation = DateTime.Now+ new TimeSpan(days: random.Next(30), hours:0, minutes:0, seconds:0);
+        private DateTime dateCreation = DateTime.Now - new TimeSpan(days: random.Next(30), hours:0, minutes:0, seconds:0);
 
         public string Name
         {
