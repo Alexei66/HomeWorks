@@ -14,7 +14,7 @@ namespace Person
 
             Person[] arrPers = new Person[]
             {
-                new Person(Guid.NewGuid(),"Имя2", "Фамилия2", 2),
+                new Person(Guid.Parse("7c269fe7-1bfe-4ca5-908f-a5052d3e70f9"),"Имя2", "Фамилия2", 2),
                 new Person(Guid.NewGuid(),"Имя3", "Фамилия3", 3),
                 new Person(Guid.NewGuid(),"Имя1", "Фамилия1", 1),
                 new Person(Guid.NewGuid(),"Имя4", "Фамилия4", 4),
@@ -41,6 +41,7 @@ namespace Person
             Console.WriteLine();
 
             
+            pr.DeletePersonById(Guid.Parse("7c269fe7-1bfe-4ca5-908f-a5052d3e70f9"));
             pr.SortByDate();
             Console.WriteLine();
 
@@ -49,7 +50,6 @@ namespace Person
                 Console.WriteLine(item.Print());
             }
 
-            //del.DeletePersonById(Guid.Parse("77e2f0d1-6242-41f2-bc83-7e77a98f5307"));
 
             //Console.WriteLine();
             //Console.WriteLine();

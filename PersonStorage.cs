@@ -113,7 +113,7 @@
         public void SortByDate()
         {
             Array.Sort(_persons, SortDate);
-                
+            
         }
 
         private int SortDate(Person x, Person y)
