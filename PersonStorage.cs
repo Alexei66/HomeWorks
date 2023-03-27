@@ -33,7 +33,7 @@
         }
        
 
-        public void ResizeArray(int length)
+        private void ResizeArray(int length)
         {
             if (_persons.Length == 0)
             {
@@ -103,7 +103,10 @@
             _persons[index] = person;
             return true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Возвращает массив людей </returns>
         public Person[] GetPersons()
         {
             _persons = Array.FindAll(_persons, x => x.Id != Guid.Empty);

@@ -1,88 +1,61 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Person
+namespace Person;
+
+public struct FileProvider
 {
-    public struct FileProvider
+    public void SavePersonsInFile(Person[] persons, string path)
     {
-        public void SavePersonsInFile(Person[] persons, string path)
-        {
 
-            Person[]? readJson = ReadingFromFile(path);
+        Person[]? readJson = ReadingFromFile(path);
 
-            var newCombine = new Person[persons.Length + readJson.Length];
+        var newCombine = new Person[persons.Length + readJson.Length];
 
 
-            Array.Copy(readJson, newCombine, readJson.Length);  // Копируем старые значения в новый массив
+        Array.Copy(readJson, newCombine, readJson.Length);  // Копируем старые значения в новый массив
 
 
-            Array.Copy(persons, 0, newCombine, readJson.Length, persons.Length); // Копируем новые значения в новый массив начиная с конца старых значений
+        Array.Copy(persons, 0, newCombine, readJson.Length, persons.Length); // Копируем новые значения в новый массив начиная с конца старых значений
 
-            string serialized = JsonConvert.SerializeObject(newCombine, Formatting.Indented);
-            File.WriteAllText(path, serialized);
+        string serialized = JsonConvert.SerializeObject(newCombine, Formatting.Indented);
+        File.WriteAllText(path, serialized);
 
-
-        }
-
-        public Person[]? ReadingFromFile(string filePath)
-        {
-
-            return JsonConvert.DeserializeObject<Person[]>(File.ReadAllText(filePath));
-
-        }
-
-
-        public void AddPersonsFromFile(string path)
-        {
-
-            string jsonText = File.ReadAllText(path);            
-            var  jsc = JsonConvert.DeserializeObject(jsonText);
-
-            // добавляем каждый элемент объекта в массив
-            foreach (var item in jsc)
-            {
-                Array.Resize(ref _persons, _persons.Length + 1);
-                _persons[_persons.Length - 1] = item.Value.ToString();
-            }
-
-            //    int oldSize = _persons.Length;
-            //    ResizeArray(oldSize + lines.Length);
-            //    for (int i = 0; i < lines.Length; i++)
-            //    {
-            //        //string[] fields = lines[i].Split('');
-            //        if ()
-            //        {
-            //            
-            //            string name =
-            //            string lastName =
-            //            int age =
-            //            Guid id = 
-            //            DateTime dateCreation =
-            //        }
-            //    }
-        }
-
-        public static Person[] ImportPersonForDateRange(string filePath, DateTime startDate, DateTime endDate)
-        {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException($"Файл {filePath} не существует.");
-            }
-
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-                string json = sr.ReadToEnd();
-                Person[] persons = JsonConvert.DeserializeObject<Person[]>(json);
-                                
-                Person[] filteredRecords = Array.FindAll(persons, r => r.Date >= startDate && r.Date <= endDate);
-
-                return filteredRecords;
-            }
-        }
 
     }
+
+    public Person[]? ReadingFromFile(string filePath)
+    {
+       if( filePath== null)  throw new ArgumentNullException($"{filePath} был Null");
+        return JsonConvert.DeserializeObject<Person[]>(File.ReadAllText(filePath));
+
+    }
+
+
+    public Person[]? AddPersonsFromFile(string path)
+    {
+
+        string jsonText = File.ReadAllText(path);
+        return JsonConvert.DeserializeObject<Person[]>(jsonText);
+                    
+    }
+
+    public  Person[] ImportPersonForDateRange(string filePath, DateTime startDate, DateTime endDate)
+    {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException($"Файл {filePath} не существует.");
+        }
+
+        using (StreamReader sr = new StreamReader(filePath))
+        {
+            string json = sr.ReadToEnd();
+            Person[] persons = JsonConvert.DeserializeObject<Person[]>(json);
+
+            Person[] filteredRecords = Array.FindAll(persons, p => p.DateCreation >= startDate && p.DateCreation <= endDate);
+
+            return filteredRecords;
+            
+        }
+    }
+
 }
