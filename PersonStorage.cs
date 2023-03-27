@@ -31,8 +31,9 @@
                 _persons[oldSize + i] = persons[i];
             }
         }
+       
 
-        public void ResizeArray(int length)
+        private void ResizeArray(int length)
         {
             if (_persons.Length == 0)
             {
@@ -102,11 +103,25 @@
             _persons[index] = person;
             return true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Возвращает массив людей </returns>
         public Person[] GetPersons()
         {
             _persons = Array.FindAll(_persons, x => x.Id != Guid.Empty);
             return _persons;
+        }
+
+        public void SortByDate()
+        {
+            Array.Sort(_persons, SortDate);
+            
+        }
+
+        private int SortDate(Person x, Person y)
+        {
+            return x.DateCreation < y.DateCreation ? -1 : x.DateCreation == y.DateCreation ? 0 : 1;
         }
     }
 }

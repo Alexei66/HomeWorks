@@ -1,47 +1,90 @@
-﻿using System;
-using static Person.Person;
+﻿namespace Person;
 
-namespace Person
+internal class Program
 {
-    internal class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
+
+        PersonStorage personStorage = new PersonStorage();
+
+        Person[] arrPers = new Person[]
         {
-            Person[] arrPers = new Person[]
-            {
-                new Person(Guid.NewGuid(),"имя1", "фамилия1", 1),
-                new Person(Guid.NewGuid(),"имя2", "фамилия2", 2),
-                new Person(Guid.NewGuid(),"имя3", "фамилия3", 3),
-                new Person(Guid.NewGuid(),"имя4", "фамилия4", 4),
-                new Person(Guid.NewGuid(),"имя6", "фамилия6", 6),
-                new Person(Guid.NewGuid(),"имя7", "фамилия7", 7),
-                new Person(Guid.NewGuid(),"имя8", "фамилия8", 8),
-            };
-            Person[] arrPers2 = new Person[]
-            {
-                new Person(Guid.NewGuid(),"имя5", "фамилия5", 5),
-                new Person(Guid.NewGuid(),"имя6", "фамилия6", 6),
-                new Person(Guid.NewGuid(),"имя7", "фамилия7", 7),
-                new Person(Guid.NewGuid(),"имя8", "фамилия8", 8),
-            };
+            new Person(Guid.Parse("7c269fe7-1bfe-4ca5-908f-a5052d3e70f9"),"Имя2", "Фамилия2", 2),
+            new Person(Guid.NewGuid(),"Имя3", "Фамилия3", 3),
+            new Person(Guid.NewGuid(),"Имя1", "Фамилия1", 1),
+            new Person(Guid.NewGuid(),"Имя4", "Фамилия4", 4),
+            new Person(Guid.NewGuid(),"Имя6", "Фамилия6", 6),
+            new Person(Guid.NewGuid(),"Имя7", "Фамилия7", 7),
+            new Person(Guid.NewGuid(),"Имя8", "Фамилия8", 8),
+        };
 
-            Person[] arrPers3 = new Person[]
-            {
-                new Person(Guid.NewGuid(),"имя55", "фамилия5", 55),
-                new Person(Guid.NewGuid(),"имя66", "фамилия6", 66),
-                new Person(Guid.NewGuid(),"имя77", "фамилия7", 77),
-                new Person(Guid.NewGuid(),"имя88", "фамилия8", 88),
-            };
-            Person person = new Person(Guid.NewGuid(), "имя5", "фамилия5", 5);
-            var personStorage = new PersonStorage();
+        string path = "qqDocumentPersons.json";
+        //var save = new FileProvider();
 
-            personStorage.AddPerson(person);
-            personStorage.AddPersons(arrPers);
+        //save.SavePersonsInFile(arrPers, "DocumentPersons.json");
 
-            foreach (var p in personStorage.GetPersons())
-            {
-                Console.WriteLine(p.Print());
-            }
+        var fp = new FileProvider();
+        try
+        {
+            fp.ReadingFromFile(null);
         }
+        catch (FileNotFoundException ex )
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message);
+        }
+        var persFromFile = fp.AddPersonsFromFile("DocumentPersons.json"); // считали людей
+
+        personStorage.AddPersons(persFromFile);               // добавляем считаных людей в хранилище
+        personStorage.AddPerson(new Person(Guid.NewGuid(), "Имя", "Фамилия", 66));// добаляем нового человека в хранилище 
+
+
+        var personsFromStor = personStorage.GetPersons();
+        try
+        {
+            var filteredPersons = fp.ImportPersonForDateRange(path, DateTime.Parse("01/01/2020"), DateTime.Parse("03/17/2023"));
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex.Message); 
+        }
+        
+       
+
+
+        foreach (var item in personsFromStor)
+        {
+            Console.WriteLine(item.Print());
+        }
+
+        Console.WriteLine();
+
+        
+        //pr.DeletePersonById(Guid.Parse("7c269fe7-1bfe-4ca5-908f-a5052d3e70f9"));
+        //pr.SortByDate();
+        //Console.WriteLine();
+
+        //foreach (var item in arrPers)
+        //{
+        //    Console.WriteLine(item.Print());
+        //}
+
+
+        //Console.WriteLine();
+        //Console.WriteLine();
+
+        //foreach (var item in readJson)
+        //{
+        //    Console.WriteLine(item.Print());
+        //}
+
+
+
     }
 }
