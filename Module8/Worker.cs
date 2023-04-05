@@ -14,7 +14,7 @@ namespace Module8
         private Guid id = Guid.NewGuid();
         private int salary;
         private int numberOfProjects;
-        private Department departmentWorker;
+        private Department department;
 
         public Worker()
         {
@@ -30,7 +30,7 @@ namespace Module8
             this.id = id;
             this.salary = salary;
             this.numberOfProjects = numberOfProjects;
-            this.departmentWorker = departmentWorker;
+            this.department = departmentWorker;
         }
 
         public string Name
@@ -51,12 +51,13 @@ namespace Module8
         public int NumberOfProjects
         { get { return numberOfProjects; } set { numberOfProjects = value; } }
 
-        public Department DepartmentWorker
-        { get { return departmentWorker; } set { departmentWorker = value; } }
+        public Department Department
+        { get { return department; } set { department = value; } }
 
         public string Print()
         {
-            return $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects} департамент {this.departmentWorker.DepartmentName} ";
+            if (Department == null) return $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects} без отдела";
+            return $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects} из {this.department?.DepartmentName} ";
         }
     }
 }

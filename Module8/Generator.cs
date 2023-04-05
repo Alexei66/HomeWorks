@@ -15,20 +15,47 @@ namespace Module8
 
         private static Random random = new Random();
 
+        private string[] names = new string[]
+        {
+          "Прохор",
+          "Яков",
+          "Юлий",
+          "Афанасий",
+          "Виль",
+          "Остин",
+          "Люций",
+          "Матвей",
+          "Владлен",
+          "Тимофей",
+        };
+
+        private string[] lastNames = new string[]
+            {
+            "Василенко",
+            "Трофимов",
+            "Дорофеев",
+            "Калашников",
+            "Поляков",
+            "Дидовец",
+            "Федоренко",
+            "Архипов",
+            "Лебедев",
+            "Ширяев",
+            };
+
         public List<Worker> GeneratingWorkers(int count)
         {
             List<Worker> workers = new List<Worker>(count);
 
             for (int i = 1; i <= count; i++)
             {
-                int age = random.Next(18, 61);
                 workers.Add(new Worker
                 {
-                    Name = $"Имя_{i}",
-                    LastName = $"Фамилия_{i}",
-                    Age = age,
+                    Name = names[random.Next(names.Length)],
+                    LastName = lastNames[random.Next(lastNames.Length)],
+                    Age = random.Next(18, 61),
                     Id = Guid.NewGuid(),
-                    Salary = 1000 * age,
+                    Salary = random.Next(1, 5) * 1000,
                     NumberOfProjects = random.Next(1, 6),
                 });
             }
@@ -52,7 +79,6 @@ namespace Module8
             return department;
         }
 
-        // Но можно сделать ведь и 3 метод, который будет создавать людей, отделы... и ЭТИХ людей рандомно пихать по ЭТИМ отделам)
         public List<Department> Departments { get; set; }
 
         public List<Worker> GenerateWorkersWithDepartments(int workerCount, int departmentCount)
@@ -66,7 +92,7 @@ namespace Module8
             {
                 var index = random.Next(departmentCount);
 
-                workers[i].DepartmentWorker = Departments[index];
+                workers[i].Department = Departments[index];
 
                 Departments[index].Workers.Add(workers[i]);
             }

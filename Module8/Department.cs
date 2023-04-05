@@ -5,36 +5,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Module8
+namespace Module8;
+
+public class Department  // Департамент знает о себе и о людях, что в департаменте работают
 {
-    public class Department  // Департамент знает о себе и о людях, что в департаменте работают
+    private string departmentName;
+
+    private DateTime dateCreation;
+
+    public Department()
     {
-        private string departmentName;
+        Workers = new List<Worker>();
+    }
 
-        private DateTime dateCreation;
+    public Department(string departmentName, DateTime dateCreation) : this()
+    {
+        this.departmentName = departmentName;
 
-        public Department()
-        {
-        }
+        this.dateCreation = dateCreation;
+    }
 
-        public Department(string departmentName, DateTime dateCreation) : this()
-        {
-            this.departmentName = departmentName;
+    public List<Worker> Workers { get; set; }
 
-            this.dateCreation = dateCreation;
-        }
+    public string DepartmentName
+    { get { return departmentName; } set { departmentName = value; } }
 
-        public List<Worker> Workers { get; set; } = new List<Worker>();
+    public DateTime DateCreation
+    { get { return dateCreation; } set { dateCreation = value; } }
 
-        public string DepartmentName
-        { get { return departmentName; } set { departmentName = value; } }
+    public string Print()
+    {
+        return $" Наименование департамента {this.departmentName}, количество работников {this.Workers.Count}. Дата записи {this.dateCreation}  ";
+    }
 
-        public DateTime DateCreation
-        { get { return dateCreation; } set { dateCreation = value; } }
+    public void AddWorker(Worker newWorker)
+    {
+        Workers.Add(newWorker);
+        newWorker.Department = this;
+    }
 
-        public string Print()
-        {
-            return $" Наименование департамента {this.departmentName}, количество работников {this.Workers.Count}. Дата записи {this.dateCreation}  ";
-        }
+    public void RemoveWorker(Worker worker)
+    {
+        Workers.Remove(worker);
     }
 }
