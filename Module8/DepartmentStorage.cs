@@ -33,7 +33,7 @@ internal class DepartmentStorage
     public void RemoveDepartment(string departmentName)
     {
         var dep = Departments.FirstOrDefault(w => w.DepartmentName == departmentName);
-        //dep.Workers.ForEach(w => w.Department = null);
+
         foreach (var worker in dep.Workers)
         {
             worker.Department = null;

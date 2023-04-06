@@ -32,21 +32,5 @@ namespace Module8
             Workers.Remove(worker); // удаляет первый найденный Id
             worker.Department.RemoveWorker(worker);
         }
-
-        //public void EditWorker(Guid id, int age)
-        //{
-        //}
-
-        //public void UpdateWorker(Guid id, int salary)
-        //{
-        //}
-
-        //public void EditWorker(Guid id, int age, int salary)
-        //{
-        //}
-
-        //public void EditWorker(Guid id, int age, int salary, int numberOfProjects)
-        //{
-        //}
     }
 }

@@ -56,8 +56,11 @@ namespace Module8
 
         public string Print()
         {
-            if (Department == null) return $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects} без отдела";
-            return $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects} из {this.department?.DepartmentName} ";
+            var person = $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects}";
+
+            if (Department == null) return $"{person}  без отдела";
+
+            return $"{person}  из {this.department?.DepartmentName} ";
         }
     }
 }
