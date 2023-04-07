@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
@@ -9,10 +10,10 @@ namespace Module8
 {
     internal class Program
     {
-        private static void PrintList(List<Worker> workers)
+        private static void PrintList(List<Worker> listWorkers)
         {
             Console.WriteLine();
-            foreach (var worker in workers)
+            foreach (var worker in listWorkers)
             {
                 Console.WriteLine(worker.Print());
             }
@@ -57,21 +58,20 @@ namespace Module8
                 " \n5-удаление департамента," +
                 " \n6-сохранение в json," +
                 " \n7-чтение из json," +
-                " \n8-сортировка сотрудников по возрасту," +
-                " \n9-сортировка сотрудников по ЗП и имени," +
+                " \n8-сортировка и печать сотрудников по возрасту," +
+                " \n9-сортировка и печать сотрудников по ЗП и имени," +
                 " \nвыход ";
-
-            var generator = new Generator();
 
             var workStorage = new WorkerStorage();
 
-            var depStor = new DepartmentStorage();
+            var generator = new Generator();
+
+            var depStorage = new DepartmentStorage();
 
             var sort = new Sort();
 
-            var listWorkers = new List<Worker> { };
-
             bool isWork = true;
+
             while (isWork)
             {
                 Console.WriteLine(allCommands);
@@ -80,31 +80,35 @@ namespace Module8
                 switch (inputComand)
                 {
                     case 0://показать всех сотрудников
-                        if (listWorkers == null)
+                        if (workStorage.Workers == null)
                         {
                             Console.Write(" Нет сотрудников ");
-                            break;
                         }
-                        PrintList(listWorkers);
+                        PrintList(workStorage.Workers);
                         break;
 
                     case 1://генератор сотрудников с департаментами
 
-                        Console.WriteLine("Кол-во сторудников");
+                        Console.Write("Кол-во сторудников: ");
                         int workersCountWDepart = IntFromConsole();
 
-                        Console.WriteLine("Кол-во департаментов");
+                        Console.Write("Кол-во департаментов: ");
                         int departCount = IntFromConsole();
 
-                        generator.GenerateWorkersWithDepartments(workersCountWDepart, departCount);
+                        var genWokers = generator.GenerateWorkersWithDepartments(workersCountWDepart, departCount);
+                        workStorage.AddWorkers(genWokers);
+
                         break;
 
-                    case 2://генератор сотрудников
+                    case 2://генератор департаметов
 
-                        Console.WriteLine("Кол-во сторудников");
-                        int workersCount = IntFromConsole();
+                        Console.WriteLine("Кол-во департаментов");
+                        int depCount = IntFromConsole();
 
-                        generator.GeneratingWorkers(workersCount);
+                        var genDepartment = generator.GeneratingDepartments(depCount).FirstOrDefault();
+
+                        depStorage.AddDepartment(genDepartment);
+
                         break;
 
                     case 3://удаление сотрудника
@@ -129,7 +133,7 @@ namespace Module8
                         Console.WriteLine("");
                         var nameDep = Console.ReadLine();
 
-                        depStor.RemoveDepartment(nameDep);
+                        depStorage.RemoveDepartment(nameDep);
 
                         break;
 
@@ -149,21 +153,40 @@ namespace Module8
                             WriteIndented = true,
                             ReferenceHandler = ReferenceHandler.Preserve,
                         };
-                        JsonSerializer.Serialize(listWorkers, jsonSerializerOptions);
+                        JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
                         break;
 
                     case 7://чтение из json
+
+                        Console.WriteLine("Название файла");
+
+                        var filePath = Console.ReadLine();
+
+                        try
+                        {
+                            JsonSerializerOptions options = new JsonSerializerOptions();
+
+                            var jsonString = File.ReadAllText(filePath);
+
+                            var texts = JsonSerializer.Deserialize<List<Worker>>(jsonString);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while reading from file {filePath}: {ex.Message}");
+                        }
 
                         break;
 
                     case 8://сортировка сотрудников по возрасту
 
-                        sort.SortBuAge(listWorkers);
+                        var sortWorkersAge = sort.SortBuAge(workStorage.Workers);
+                        PrintList(sortWorkersAge);
                         break;
 
                     case 9://сортировка сотрудников по ЗП и имени
 
-                        sort.SortBuSalaryByLastName(listWorkers);
+                        var sortWorkersSalaryName = sort.SortBuSalaryByLastName(workStorage.Workers);
+
                         break;
 
                     default:
@@ -186,7 +209,7 @@ namespace Module8
             //PrintList(sortWorkers);
             //var dep = generator.GeneratingDepartments(1).FirstOrDefault();
 
-            //depStor.AddDepartment(dep);
+            //depStorage.AddDepartment(dep);
             //var newWorkers = new List<Worker>
             //{
             //    new Worker(Guid.NewGuid(),"имя1","фамилия1",25,2500,2,dep),
@@ -199,7 +222,7 @@ namespace Module8
 
             //PrintList(workStorage.Workers);
 
-            //depStor.RemoveDepartment(dep.DepartmentName);
+            //depStorage.RemoveDepartment(dep.DepartmentName);
 
             //PrintList(workStorage.Workers);
 
