@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http.Json;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Module8
 {
@@ -50,23 +46,25 @@ namespace Module8
              */
 
             string allCommands =
-                " \n0-показать всех сотрудников," +
-                " \n1-генератор сотрудников с департаментами," +
-                " \n2-генератор сотрудников, " +
-                " \n3-удаление сотрудника," +
-                " \n4-изменить имя сотрудника," +
-                " \n5-удаление департамента," +
-                " \n6-сохранение в json," +
-                " \n7-чтение из json," +
-                " \n8-сортировка и печать сотрудников по возрасту," +
-                " \n9-сортировка и печать сотрудников по ЗП и имени," +
-                " \nвыход ";
+                " \n\t0-показать всех сотрудников," +
+                " \n\t1-генератор сотрудников с департаментами," +
+                " \n\t2-генератор департаметов, " +
+                " \n\t3-удаление сотрудника по Guid," +
+                " \n\t4-изменить ЗП сотрудника," +
+                " \n\t5-удаление департамента," +
+                " \n\t6-сохранение данные в json," +
+                " \n\t7-загрузить данные из json," +
+                " \n\t8-сортировка и печать сотрудников по возрасту," +
+                " \n\t9-сортировка и печать сотрудников по ЗП и имени," +
+                " \n\tвыход ";
 
             var workStorage = new WorkerStorage();
 
             var generator = new Generator();
 
             var depStorage = new DepartmentStorage();
+
+            var department = new Department();
 
             var sort = new Sort();
 
@@ -80,7 +78,7 @@ namespace Module8
                 switch (inputComand)
                 {
                     case 0://показать всех сотрудников
-                        if (workStorage.Workers == null)
+                        if (workStorage.Workers.Count == 0)
                         {
                             Console.Write(" Нет сотрудников ");
                         }
@@ -98,22 +96,28 @@ namespace Module8
                         var genWokers = generator.GenerateWorkersWithDepartments(workersCountWDepart, departCount);
                         workStorage.AddWorkers(genWokers);
 
+                        Console.WriteLine("Сотрудники сгенерированы");
+
                         break;
 
                     case 2://генератор департаметов
 
-                        Console.WriteLine("Кол-во департаментов");
+                        Console.Write("Кол-во департаментов ");
                         int depCount = IntFromConsole();
+                        for (int i = 0; i < depCount; i++)
+                        {
+                            var genDepartment = generator.GeneratingDepartments(depCount).FirstOrDefault();
 
-                        var genDepartment = generator.GeneratingDepartments(depCount).FirstOrDefault();
+                            depStorage.AddDepartment(genDepartment);
+                        }
 
-                        depStorage.AddDepartment(genDepartment);
+                        Console.WriteLine("Успешно ");
 
                         break;
 
                     case 3://удаление сотрудника
 
-                        Console.Write("Guid будет удален");
+                        Console.Write("Введи Guid сотрудника ");
                         Guid guidRemove;
 
                         while (!Guid.TryParse(Console.ReadLine(), out guidRemove))
@@ -122,15 +126,40 @@ namespace Module8
                         }
 
                         workStorage.RemoveWorker(guidRemove);
+
+                        Console.WriteLine($"Сотрудник с {guidRemove} удален");
                         break;
 
-                    case 4://изменить имя сотрудника
+                    case 4://изменить ЗП сотрудника
+
+                        Console.Write("ЗП которую меняем ");
+                        int oldSalary = IntFromConsole();
+
+                        Console.Write("Новая ЗП ");
+                        int newSalary = IntFromConsole();
+
+                        foreach (Worker worker in workStorage.Workers)
+                        //oldSalary = worker.Salary.FirstOrDefault(w => w.Salary == newSalary);
+
+                        {
+                            if (worker.Salary == oldSalary)
+                            {
+                                worker.Salary = newSalary;
+                                Console.WriteLine($"ЗП {oldSalary} успешно изменена на {newSalary}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"ЗП {oldSalary} не найдено");
+                            }
+                        }
 
                         break;
 
                     case 5://удаление департамента
 
-                        Console.WriteLine("");
+                        department.Print();
+
+                        Console.Write("Удаление департамента ");
                         var nameDep = Console.ReadLine();
 
                         depStorage.RemoveDepartment(nameDep);
@@ -139,45 +168,75 @@ namespace Module8
 
                     case 6://сохранение в json
 
-                        Console.Write("Название файла");
-                        var fileName = Console.ReadLine();
+                        Console.Write("Название файла ");
+                        var fileName = Console.ReadLine() + ".json";
 
                         while (!File.Exists(fileName))
                         {
-                            Console.WriteLine($"Файл {fileName} не существует. .");
-                            fileName = Console.ReadLine();
+                            Console.WriteLine($"Файл {fileName} не существует.");
+                            Console.Write("Хотите создать новый файл с таким именем? (y/n): ");
+                            var response = Console.ReadLine();
+                            if (response == "y")
+                            {
+                                using (FileStream fs = File.Create(fileName))
+                                {
+                                    Console.WriteLine($"Файл {fileName} успешно создан.");
+                                }
+                            }
+                            else
+                            {
+                                Console.Write("Введите другое название файла: ");
+                                fileName = Console.ReadLine();
+                            }
                         }
 
                         JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
                         {
                             WriteIndented = true,
                             ReferenceHandler = ReferenceHandler.Preserve,
+                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                         };
-                        JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
+                        var json = JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
+                        File.WriteAllText(fileName, json, Encoding.UTF8);
+
                         break;
 
                     case 7://чтение из json
 
-                        Console.WriteLine("Название файла");
+                        Console.Write("\nВведите имя файла: ");
 
-                        var filePath = Console.ReadLine();
+                        string filePath = Console.ReadLine() + ".json";
+
+                        while (!File.Exists(filePath))
+                        {
+                            Console.WriteLine($"Файл {filePath} не существует.\n Введите другое название файла: ");
+                            filePath = Console.ReadLine() + ".json";
+                        }
+
+                        string textJson = File.ReadAllText(filePath);
 
                         try
                         {
-                            JsonSerializerOptions options = new JsonSerializerOptions();
-
-                            var jsonString = File.ReadAllText(filePath);
-
-                            var texts = JsonSerializer.Deserialize<List<Worker>>(jsonString);
+                            var workers = JsonSerializer.Deserialize<List<Worker>>(textJson);
+                            //workStorage.AddWorkers(workers);
+                            Console.WriteLine($"Файл {filePath} успешно прочитан, данные загружены.");
                         }
-                        catch (Exception ex)
+                        catch (JsonException e)
                         {
-                            Console.WriteLine($"An error occurred while reading from file {filePath}: {ex.Message}");
+                            Console.WriteLine($"Ошибка: {e.Message}");
                         }
 
+                        //var textJsonOB = JsonSerializer.Deserialize<List<Worker>>(textJson);
+                        //var jsont = JsonSerializer.Deserialize(textJson, jsonSerializerOptions);
+                        //List<Worker> workers = JsonSerializer.Deserialize<List<Worker>>(textJson);
                         break;
 
                     case 8://сортировка сотрудников по возрасту
+
+                        if (workStorage.Workers.Count == 0)
+                        {
+                            Console.Write("\n Нет сотрудников для сортировки ");
+                        }
 
                         var sortWorkersAge = sort.SortBuAge(workStorage.Workers);
                         PrintList(sortWorkersAge);
@@ -185,13 +244,18 @@ namespace Module8
 
                     case 9://сортировка сотрудников по ЗП и имени
 
-                        var sortWorkersSalaryName = sort.SortBuSalaryByLastName(workStorage.Workers);
+                        if (workStorage.Workers.Count == 0)
+                        {
+                            Console.Write("\n Нет сотрудников для сортировки ");
+                        }
 
+                        var sortWorkersSalaryName = sort.SortBuSalaryByLastName(workStorage.Workers);
+                        PrintList(sortWorkersSalaryName);
                         break;
 
                     default:
 
-                        Console.WriteLine("Выходим");
+                        Console.WriteLine("\nВыходим");
                         isWork = false;
                         break;
                 }
