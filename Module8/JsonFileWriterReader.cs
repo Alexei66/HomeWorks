@@ -32,14 +32,15 @@ namespace Module8
             return path;
         }
 
+        public JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+        {
+            WriteIndented = true,
+            ReferenceHandler = ReferenceHandler.Preserve,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        };
+
         public void FileSerialize(string path)
         {
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.Preserve,
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            };
             try
             {
                 path = ValidFilePath(path);
@@ -56,13 +57,6 @@ namespace Module8
         public void FileDeserialize(string path)
         {
             var workStorage = new WorkerStorage();
-
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.Preserve,
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            };
 
             try
             {
