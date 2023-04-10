@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Module8;
+namespace Module8.Models;
 
 public class Department  // Департамент знает о себе и о людях, что в департаменте работают
 {
@@ -35,7 +35,7 @@ public class Department  // Департамент знает о себе и о 
 
     public string Print()
     {
-        return $" Наименование департамента {this.departmentName}, количество работников {this.Workers.Count}. Дата записи {this.dateCreation}  ";
+        return $" Наименование департамента {departmentName}, количество работников {Workers.Count}. Дата записи {dateCreation}  ";
     }
 
     public void AddWorker(Worker newWorker)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Module8.Models;
 
 namespace Module8;
 
@@ -40,5 +41,23 @@ internal class DepartmentStorage
         }
 
         Departments.Remove(dep); // удаляет первый найденный
+    }
+
+    public string PrintDepString()
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in Departments)
+        {
+            sb.AppendLine(item.DepartmentName);
+        }
+        return sb.ToString();
+    }
+
+    public IEnumerable<string> PrintDepartmentName()
+    {
+        foreach (var item in Departments)
+        {
+            yield return item.DepartmentName;
+        }
     }
 }

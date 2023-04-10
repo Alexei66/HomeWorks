@@ -3,13 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Module8.Models;
+using Module8.Storage;
 
 namespace Module8
 {
     internal class Sort
     {
-        public List<Worker> SortBuSalaryByLastName(List<Worker> workers)
+        private static void EmptyWorker(List<Worker> workers)
         {
+            try
+            {
+                if (workers.Count == 0)
+                {
+                    throw new Exception("\nНет сотрудников для сортировки");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public List<Worker> SortBySalaryByLastName(List<Worker> workers)
+        {
+            EmptyWorker(workers);
             var workerList = workers
                 .OrderBy(w => w.Salary)
                 .ThenBy(w => w.LastName)
@@ -18,16 +36,18 @@ namespace Module8
             return workerList;
         }
 
-        public List<Worker> SortBuAge(List<Worker> workers)
+        public List<Worker> SortByAge(List<Worker> workers)
         {
+            EmptyWorker(workers);
             var workerList = workers
                 .OrderBy(w => w.Age).ToList();
 
             return workerList;
         }
 
-        public List<Worker> SortByAgeBuSalaryByDepartment(List<Worker> workers)
+        public List<Worker> SortByAgeBySalaryByDepartment(List<Worker> workers)
         {
+            EmptyWorker(workers);
             var workerList = workers
                 .OrderBy(w => w.Age)
                 .ThenBy(w => w.Salary)

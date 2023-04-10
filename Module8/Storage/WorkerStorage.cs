@@ -1,11 +1,11 @@
-﻿using Module8;
+﻿using Module8.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Module8
+namespace Module8.Storage
 {
     internal class WorkerStorage
     {

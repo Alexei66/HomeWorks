@@ -1,12 +1,14 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Module8.Models;
+using Module8.Storage;
 
 namespace Module8
 {
     internal class Program
     {
-        private static void PrintList(List<Worker> listWorkers)
+        private static void PrintList(List<Worker> listWorkers) // перенести в ворк стор
         {
             Console.WriteLine();
             foreach (var worker in listWorkers)
@@ -45,6 +47,14 @@ namespace Module8
             /// Добавление, удаление, редактирование сотрудников и департаментов
              */
 
+            //App.Start();
+
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            };
             string allCommands =
                 " \n\t0-показать всех сотрудников," +
                 " \n\t1-генератор сотрудников с департаментами," +
@@ -63,8 +73,6 @@ namespace Module8
             var generator = new Generator();
 
             var depStorage = new DepartmentStorage();
-
-            var department = new Department();
 
             var sort = new Sort();
 
@@ -95,7 +103,7 @@ namespace Module8
 
                         var genWokers = generator.GenerateWorkersWithDepartments(workersCountWDepart, departCount);
                         workStorage.AddWorkers(genWokers);
-
+                        depStorage.AddDepartments(generator.Departments);
                         Console.WriteLine("Сотрудники сгенерированы");
 
                         break;
@@ -104,12 +112,10 @@ namespace Module8
 
                         Console.Write("Кол-во департаментов ");
                         int depCount = IntFromConsole();
-                        for (int i = 0; i < depCount; i++)
-                        {
-                            var genDepartment = generator.GeneratingDepartments(depCount).FirstOrDefault();
 
-                            depStorage.AddDepartment(genDepartment);
-                        }
+                        var genDepartment = generator.GeneratingDepartments(depCount);
+
+                        depStorage.AddDepartments(genDepartment);
 
                         Console.WriteLine("Успешно ");
 
@@ -131,6 +137,7 @@ namespace Module8
                         break;
 
                     case 4://изменить ЗП сотрудника
+                        //TODO нет проверки
 
                         Console.Write("ЗП которую меняем ");
                         int oldSalary = IntFromConsole();
@@ -140,7 +147,6 @@ namespace Module8
 
                         foreach (Worker worker in workStorage.Workers)
                         //oldSalary = worker.Salary.FirstOrDefault(w => w.Salary == newSalary);
-
                         {
                             if (worker.Salary == oldSalary)
                             {
@@ -152,14 +158,15 @@ namespace Module8
                                 Console.WriteLine($"ЗП {oldSalary} не найдено");
                             }
                         }
-
                         break;
 
                     case 5://удаление департамента
 
-                        department.Print();
+                        var test1 = depStorage.PrintDepartmentName();
+                        var test2 = depStorage.PrintDepString();
+                        Console.WriteLine(test2);
 
-                        Console.Write("Удаление департамента ");
+                        Console.Write("Удаление департамента "); // TODO нет проверки на существующий департамент
                         var nameDep = Console.ReadLine();
 
                         depStorage.RemoveDepartment(nameDep);
@@ -180,7 +187,7 @@ namespace Module8
                             {
                                 using (FileStream fs = File.Create(fileName))
                                 {
-                                    Console.WriteLine($"Файл {fileName} успешно создан.");
+                                    Console.WriteLine($"Файл {fileName} успешно создан."); // что-то передать в консоль
                                 }
                             }
                             else
@@ -190,12 +197,6 @@ namespace Module8
                             }
                         }
 
-                        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-                        {
-                            WriteIndented = true,
-                            ReferenceHandler = ReferenceHandler.Preserve,
-                            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                        };
                         var json = JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
                         File.WriteAllText(fileName, json, Encoding.UTF8);
 
@@ -217,8 +218,8 @@ namespace Module8
 
                         try
                         {
-                            var workers = JsonSerializer.Deserialize<List<Worker>>(textJson);
-                            //workStorage.AddWorkers(workers);
+                            var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
+                            workStorage.AddWorkers(workers);
                             Console.WriteLine($"Файл {filePath} успешно прочитан, данные загружены.");
                         }
                         catch (JsonException e)
@@ -233,23 +234,13 @@ namespace Module8
 
                     case 8://сортировка сотрудников по возрасту
 
-                        if (workStorage.Workers.Count == 0)
-                        {
-                            Console.Write("\n Нет сотрудников для сортировки ");
-                        }
-
-                        var sortWorkersAge = sort.SortBuAge(workStorage.Workers);
+                        var sortWorkersAge = sort.SortByAge(workStorage.Workers);
                         PrintList(sortWorkersAge);
                         break;
 
                     case 9://сортировка сотрудников по ЗП и имени
 
-                        if (workStorage.Workers.Count == 0)
-                        {
-                            Console.Write("\n Нет сотрудников для сортировки ");
-                        }
-
-                        var sortWorkersSalaryName = sort.SortBuSalaryByLastName(workStorage.Workers);
+                        var sortWorkersSalaryName = sort.SortBySalaryByLastName(workStorage.Workers);
                         PrintList(sortWorkersSalaryName);
                         break;
 
@@ -260,47 +251,6 @@ namespace Module8
                         break;
                 }
             }
-
-            //var workers = gen.GenerateWorkersWithDepartments(21, 5);
-            //var depart = gen.Departments;
-
-            //PrintList(workers);
-
-            //Console.WriteLine();
-            //Console.WriteLine();
-
-            //var sortWorkers = sort.SortByAgeBuSalaryByDepartment(workers);
-            //PrintList(sortWorkers);
-            //var dep = generator.GeneratingDepartments(1).FirstOrDefault();
-
-            //depStorage.AddDepartment(dep);
-            //var newWorkers = new List<Worker>
-            //{
-            //    new Worker(Guid.NewGuid(),"имя1","фамилия1",25,2500,2,dep),
-            //    new Worker(Guid.NewGuid(),"имя2","фамилия2",25,2500,2,dep)
-            //};
-
-            //workStorage.AddWorkers(newWorkers);
-            //dep.AddWorker(newWorkers[0]);
-            //dep.AddWorker(newWorkers[1]);
-
-            //PrintList(workStorage.Workers);
-
-            //depStorage.RemoveDepartment(dep.DepartmentName);
-
-            //PrintList(workStorage.Workers);
-
-            //workStorage.RemoveWorker(newWorkers[0].Id);
-            //PrintList(workStorage.Workers);
-            //var worker = new Worker(Guid.NewGuid(), "Фамилия3", "Имя3", 35, 3500, 4, new Department("Отдел3", DateTime.Now));
-
-            //JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-            //{
-            //    WriteIndented = true,
-            //    ReferenceHandler = ReferenceHandler.Preserve,
-            //};
-            //var text = JsonSerializer.Serialize(worker, jsonSerializerOptions); // настроить JsonSerializerOptions
-            //Console.WriteLine(text);
         }
     }
 }

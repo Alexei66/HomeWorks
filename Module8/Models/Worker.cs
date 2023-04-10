@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Module8
+namespace Module8.Models
 {
     public class Worker  // Worker знает только про себя... и департамент, к которому относится
     {
@@ -30,7 +30,7 @@ namespace Module8
             this.id = id;
             this.salary = salary;
             this.numberOfProjects = numberOfProjects;
-            this.department = departmentWorker;
+            department = departmentWorker;
         }
 
         public string Name
@@ -56,11 +56,11 @@ namespace Module8
 
         public string Print()
         {
-            var person = $"{this.id}. Я {this.lastName} {this.name}. Мне {this.age} лет. ЗП {this.salary} проектов {this.numberOfProjects}";
+            var person = $"{id}. Я {lastName} {name}. Мне {age} лет. ЗП {salary} проектов {numberOfProjects}";
 
             if (Department == null) return $"{person}  без отдела";
 
-            return $"{person}  из {this.department?.DepartmentName} ";
+            return $"{person}  из {department?.DepartmentName} ";
         }
     }
 }
