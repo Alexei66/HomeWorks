@@ -203,28 +203,6 @@ namespace Module8
                         Console.Write("Название файла ");
                         var fileName = Console.ReadLine() + ".json";
 
-                        //while (!File.Exists(fileName))
-                        //{
-                        //    Console.WriteLine($"Файл {fileName} не существует.");
-                        //    Console.Write("Хотите создать новый файл с таким именем? (y/n): ");
-                        //    var response = Console.ReadLine();
-                        //    if (response == "y")
-                        //    {
-                        //        using (FileStream fs = File.Create(fileName))
-                        //        {
-                        //            Console.WriteLine($"Файл {fileName} успешно создан."); // что-то передать в консоль
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        Console.Write("Введите другое название файла: ");
-                        //        fileName = Console.ReadLine();
-                        //    }
-                        //}
-
-                        //var json = JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
-                        //File.WriteAllText(fileName, json, Encoding.UTF8);
-
                         break;
 
                     case 7://чтение из json
@@ -233,30 +211,9 @@ namespace Module8
 
                         string filePath = Console.ReadLine() + ".json";
 
-                        fileJson.FileDeserialize(filePath);
+                        var tes = fileJson.FileDeserialize(filePath);
+                        workStorage.AddWorkers(tes);
 
-                        //while (!File.Exists(filePath))
-                        //{
-                        //    Console.WriteLine($"Файл {filePath} не существует.\n Введите другое название файла: ");
-                        //    filePath = Console.ReadLine() + ".json";
-                        //}
-
-                        //string textJson = File.ReadAllText(filePath);
-
-                        //try
-                        //{
-                        //    var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
-                        //    workStorage.AddWorkers(workers);
-                        //    Console.WriteLine($"Файл {filePath} успешно прочитан, данные загружены.");
-                        //}
-                        //catch (JsonException e)
-                        //{
-                        //    Console.WriteLine($"Ошибка: {e.Message}");
-                        //}
-
-                        //var textJsonOB = JsonSerializer.Deserialize<List<Worker>>(textJson);
-                        //var jsont = JsonSerializer.Deserialize(textJson, jsonSerializerOptions);
-                        //List<Worker> workers = JsonSerializer.Deserialize<List<Worker>>(textJson);
                         break;
 
                     case 8://сортировка сотрудников по возрасту

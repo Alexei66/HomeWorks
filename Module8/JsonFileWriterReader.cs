@@ -54,10 +54,8 @@ namespace Module8
             }
         }
 
-        public void FileDeserialize(string path)
+        public List<Worker> FileDeserialize(string path)
         {
-            var workStorage = new WorkerStorage();
-
             try
             {
                 path = ValidFilePath(path);
@@ -65,13 +63,16 @@ namespace Module8
                 string textJson = File.ReadAllText(path);
 
                 var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
-                workStorage.AddWorkers(workers);
+
                 Console.WriteLine($"Файл {path} успешно прочитан, данные загружены.");
+
+                return workers;
             }
             catch (JsonException e)
             {
                 Console.WriteLine($"Ошибка: {e.Message}");
             }
+            return null;
         }
     }
 }
