@@ -32,5 +32,15 @@ namespace Module8.Storage
             Workers.Remove(worker); // удаляет первый найденный Id
             worker.Department.RemoveWorker(worker);
         }
+
+        public string PrintWorkers(List<Worker> listWorkers)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in listWorkers)
+            {
+                sb.AppendLine(item.Print());
+            }
+            return sb.ToString();
+        }
     }
 }

@@ -43,7 +43,7 @@ internal class DepartmentStorage
         Departments.Remove(dep); // удаляет первый найденный
     }
 
-    public string PrintDepString()
+    public string PrintDepName()
     {
         StringBuilder sb = new StringBuilder();
         foreach (var item in Departments)

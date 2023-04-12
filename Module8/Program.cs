@@ -8,15 +8,6 @@ namespace Module8
 {
     internal class Program
     {
-        private static void PrintList(List<Worker> listWorkers) // перенести в ворк стор
-        {
-            Console.WriteLine();
-            foreach (var worker in listWorkers)
-            {
-                Console.WriteLine(worker.Print());
-            }
-        }
-
         private static int IntFromConsole()
         {
             int correctValue;
@@ -49,12 +40,12 @@ namespace Module8
 
             //App.Start();
 
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.Preserve,
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            };
+            //JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            //{
+            //    WriteIndented = true,
+            //    ReferenceHandler = ReferenceHandler.Preserve,
+            //    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            //};
             string allCommands =
                 " \n\t0-показать всех сотрудников," +
                 " \n\t1-генератор сотрудников с департаментами," +
@@ -76,6 +67,8 @@ namespace Module8
 
             var sort = new Sort();
 
+            var fileJson = new JsonFileWriterReader();
+
             bool isWork = true;
 
             while (isWork)
@@ -90,7 +83,8 @@ namespace Module8
                         {
                             Console.Write(" Нет сотрудников ");
                         }
-                        PrintList(workStorage.Workers);
+                        var printWorkers = workStorage.PrintWorkers(workStorage.Workers);
+                        Console.WriteLine(printWorkers);
                         break;
 
                     case 1://генератор сотрудников с департаментами
@@ -102,8 +96,10 @@ namespace Module8
                         int departCount = IntFromConsole();
 
                         var genWokers = generator.GenerateWorkersWithDepartments(workersCountWDepart, departCount);
+
                         workStorage.AddWorkers(genWokers);
                         depStorage.AddDepartments(generator.Departments);
+
                         Console.WriteLine("Сотрудники сгенерированы");
 
                         break;
@@ -117,7 +113,7 @@ namespace Module8
 
                         depStorage.AddDepartments(genDepartment);
 
-                        Console.WriteLine("Успешно ");
+                        Console.WriteLine("Департаметы успешно сгенерированы ");
 
                         break;
 
@@ -126,51 +122,80 @@ namespace Module8
                         Console.Write("Введи Guid сотрудника ");
                         Guid guidRemove;
 
-                        while (!Guid.TryParse(Console.ReadLine(), out guidRemove))
+                        bool guidFound = false;
+
+                        while (!guidFound)
                         {
-                            Console.WriteLine("Недопустимый идентификатор GUID");
+                            Console.Write("Введи Guid сотрудника: ");
+                            guidFound = Guid.TryParse(Console.ReadLine(), out guidRemove);
+
+                            if (!guidFound)
+                            {
+                                Console.WriteLine("Недопустимый идентификатор GUID");
+                            }
+                            else if (!workStorage.Workers.Any(w => w.Id == guidRemove))
+                            {
+                                Console.WriteLine("Сотрудник с таким GUID не найден. Попробуйте еще раз.");
+                                guidFound = false;
+                            }
                         }
 
-                        workStorage.RemoveWorker(guidRemove);
-
-                        Console.WriteLine($"Сотрудник с {guidRemove} удален");
                         break;
 
                     case 4://изменить ЗП сотрудника
-                        //TODO нет проверки
 
-                        Console.Write("ЗП которую меняем ");
-                        int oldSalary = IntFromConsole();
+                        bool salaryFound = false;
 
-                        Console.Write("Новая ЗП ");
-                        int newSalary = IntFromConsole();
-
-                        foreach (Worker worker in workStorage.Workers)
-                        //oldSalary = worker.Salary.FirstOrDefault(w => w.Salary == newSalary);
+                        do
                         {
-                            if (worker.Salary == oldSalary)
+                            Console.Write("ЗП которую меняем: ");
+                            int oldSalary = IntFromConsole();
+
+                            foreach (Worker worker in workStorage.Workers)
                             {
-                                worker.Salary = newSalary;
-                                Console.WriteLine($"ЗП {oldSalary} успешно изменена на {newSalary}");
+                                if (worker.Salary == oldSalary)
+                                {
+                                    Console.Write("Новая ЗП: ");
+                                    int newSalary = IntFromConsole();
+
+                                    worker.Salary = newSalary;
+                                    Console.WriteLine($"ЗП {oldSalary} успешно изменена на {newSalary}");
+                                    salaryFound = true;
+                                    break;
+                                }
                             }
-                            else
+
+                            if (!salaryFound)
                             {
-                                Console.WriteLine($"ЗП {oldSalary} не найдено");
+                                Console.WriteLine($"ЗП {oldSalary} не найдено. Попробуйте еще раз.");
                             }
-                        }
+                        } while (!salaryFound);
+
                         break;
 
                     case 5://удаление департамента
 
-                        var test1 = depStorage.PrintDepartmentName();
-                        var test2 = depStorage.PrintDepString();
+                        var test2 = depStorage.PrintDepName();
                         Console.WriteLine(test2);
 
-                        Console.Write("Удаление департамента "); // TODO нет проверки на существующий департамент
-                        var nameDep = Console.ReadLine();
+                        string nameDep;
+                        bool departmentExists = false;
+                        do
+                        {
+                            Console.Write("Удаление департамента: ");
+                            nameDep = Console.ReadLine();
+
+                            if (depStorage.Departments.Any(d => d.DepartmentName == nameDep)) //  Any - используется для проверки,
+                            {                                                                 //  есть ли хотя бы один элемент в последовательности
+                                Console.WriteLine($"Департамент {nameDep} удален");           //  который удовлетворяет заданному условию
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Департамент {nameDep} не найден. Попробуйте снова.");
+                            }
+                        } while (!departmentExists);
 
                         depStorage.RemoveDepartment(nameDep);
-
                         break;
 
                     case 6://сохранение в json
@@ -178,27 +203,27 @@ namespace Module8
                         Console.Write("Название файла ");
                         var fileName = Console.ReadLine() + ".json";
 
-                        while (!File.Exists(fileName))
-                        {
-                            Console.WriteLine($"Файл {fileName} не существует.");
-                            Console.Write("Хотите создать новый файл с таким именем? (y/n): ");
-                            var response = Console.ReadLine();
-                            if (response == "y")
-                            {
-                                using (FileStream fs = File.Create(fileName))
-                                {
-                                    Console.WriteLine($"Файл {fileName} успешно создан."); // что-то передать в консоль
-                                }
-                            }
-                            else
-                            {
-                                Console.Write("Введите другое название файла: ");
-                                fileName = Console.ReadLine();
-                            }
-                        }
+                        //while (!File.Exists(fileName))
+                        //{
+                        //    Console.WriteLine($"Файл {fileName} не существует.");
+                        //    Console.Write("Хотите создать новый файл с таким именем? (y/n): ");
+                        //    var response = Console.ReadLine();
+                        //    if (response == "y")
+                        //    {
+                        //        using (FileStream fs = File.Create(fileName))
+                        //        {
+                        //            Console.WriteLine($"Файл {fileName} успешно создан."); // что-то передать в консоль
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        Console.Write("Введите другое название файла: ");
+                        //        fileName = Console.ReadLine();
+                        //    }
+                        //}
 
-                        var json = JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
-                        File.WriteAllText(fileName, json, Encoding.UTF8);
+                        //var json = JsonSerializer.Serialize(workStorage.Workers, jsonSerializerOptions);
+                        //File.WriteAllText(fileName, json, Encoding.UTF8);
 
                         break;
 
@@ -208,24 +233,26 @@ namespace Module8
 
                         string filePath = Console.ReadLine() + ".json";
 
-                        while (!File.Exists(filePath))
-                        {
-                            Console.WriteLine($"Файл {filePath} не существует.\n Введите другое название файла: ");
-                            filePath = Console.ReadLine() + ".json";
-                        }
+                        fileJson.FileDeserialize(filePath);
 
-                        string textJson = File.ReadAllText(filePath);
+                        //while (!File.Exists(filePath))
+                        //{
+                        //    Console.WriteLine($"Файл {filePath} не существует.\n Введите другое название файла: ");
+                        //    filePath = Console.ReadLine() + ".json";
+                        //}
 
-                        try
-                        {
-                            var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
-                            workStorage.AddWorkers(workers);
-                            Console.WriteLine($"Файл {filePath} успешно прочитан, данные загружены.");
-                        }
-                        catch (JsonException e)
-                        {
-                            Console.WriteLine($"Ошибка: {e.Message}");
-                        }
+                        //string textJson = File.ReadAllText(filePath);
+
+                        //try
+                        //{
+                        //    var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
+                        //    workStorage.AddWorkers(workers);
+                        //    Console.WriteLine($"Файл {filePath} успешно прочитан, данные загружены.");
+                        //}
+                        //catch (JsonException e)
+                        //{
+                        //    Console.WriteLine($"Ошибка: {e.Message}");
+                        //}
 
                         //var textJsonOB = JsonSerializer.Deserialize<List<Worker>>(textJson);
                         //var jsont = JsonSerializer.Deserialize(textJson, jsonSerializerOptions);
@@ -235,13 +262,15 @@ namespace Module8
                     case 8://сортировка сотрудников по возрасту
 
                         var sortWorkersAge = sort.SortByAge(workStorage.Workers);
-                        PrintList(sortWorkersAge);
+                        var printSortByA = workStorage.PrintWorkers(sortWorkersAge);
+                        Console.WriteLine(printSortByA);
                         break;
 
                     case 9://сортировка сотрудников по ЗП и имени
 
                         var sortWorkersSalaryName = sort.SortBySalaryByLastName(workStorage.Workers);
-                        PrintList(sortWorkersSalaryName);
+                        var printSortBySN = workStorage.PrintWorkers(sortWorkersSalaryName);
+                        Console.WriteLine(printSortBySN); ;
                         break;
 
                     default:

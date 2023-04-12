@@ -12,16 +12,9 @@ namespace Module8
     {
         private static void EmptyWorker(List<Worker> workers)
         {
-            try
+            if (workers.Count == 0)
             {
-                if (workers.Count == 0)
-                {
-                    throw new Exception("\nНет сотрудников для сортировки");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                throw new Exception("\nНет сотрудников для сортировки");
             }
         }
 
