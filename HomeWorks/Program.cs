@@ -4,7 +4,6 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-
         PersonStorage personStorage = new PersonStorage();
 
         Person[] arrPers = new Person[]
@@ -28,21 +27,18 @@ internal class Program
         {
             fp.ReadingFromFile(null);
         }
-        catch (FileNotFoundException ex )
+        catch (FileNotFoundException ex)
         {
-
             Console.WriteLine(ex.Message);
         }
         catch (Exception ex)
         {
-
             Console.WriteLine(ex.Message);
         }
         var persFromFile = fp.AddPersonsFromFile("DocumentPersons.json"); // считали людей
 
         personStorage.AddPersons(persFromFile);               // добавляем считаных людей в хранилище
-        personStorage.AddPerson(new Person(Guid.NewGuid(), "Имя", "Фамилия", 66));// добаляем нового человека в хранилище 
-
+        personStorage.AddPerson(new Person(Guid.NewGuid(), "Имя", "Фамилия", 66));// добаляем нового человека в хранилище
 
         var personsFromStor = personStorage.GetPersons();
         try
@@ -51,12 +47,8 @@ internal class Program
         }
         catch (Exception ex)
         {
-
-            Console.WriteLine(ex.Message); 
+            Console.WriteLine(ex.Message);
         }
-        
-       
-
 
         foreach (var item in personsFromStor)
         {
@@ -65,7 +57,6 @@ internal class Program
 
         Console.WriteLine();
 
-        
         //pr.DeletePersonById(Guid.Parse("7c269fe7-1bfe-4ca5-908f-a5052d3e70f9"));
         //pr.SortByDate();
         //Console.WriteLine();
@@ -75,7 +66,6 @@ internal class Program
         //    Console.WriteLine(item.Print());
         //}
 
-
         //Console.WriteLine();
         //Console.WriteLine();
 
@@ -83,8 +73,5 @@ internal class Program
         //{
         //    Console.WriteLine(item.Print());
         //}
-
-
-
     }
 }
