@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace Module8.Models;
+﻿namespace Module8.Models;
 
 public class Department  // Департамент знает о себе и о людях, что в департаменте работают
 {

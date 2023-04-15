@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Module8.Models;
 using System.Text;
-using System.Threading.Tasks;
-using Module8.Models;
 
 namespace Module8;
 
-internal class DepartmentStorage
+public class DepartmentStorage
 {
     public List<Department> Departments { get; set; }
 

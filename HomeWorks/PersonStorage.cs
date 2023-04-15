@@ -31,7 +31,6 @@
                 _persons[oldSize + i] = persons[i];
             }
         }
-       
 
         private void ResizeArray(int length)
         {
@@ -103,8 +102,9 @@
             _persons[index] = person;
             return true;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns>Возвращает массив людей </returns>
         public Person[] GetPersons()
@@ -116,7 +116,6 @@
         public void SortByDate()
         {
             Array.Sort(_persons, SortDate);
-            
         }
 
         private int SortDate(Person x, Person y)

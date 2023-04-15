@@ -1,78 +1,81 @@
 ﻿using Module8.Models;
-using Module8.Storage;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Module8
+namespace Module8;
+
+public class JsonFileWriterReader
 {
-    public class JsonFileWriterReader
+    private ConsoleWriter _consoleWriter; //это приватное поле класса JsonFileWriteRead
+
+    public JsonFileWriterReader(ConsoleWriter consoleWriter) //это конструктор
     {
-        public List<Worker> Workers { get; set; }
+        _consoleWriter = consoleWriter; //тут мы присвоили параметр, который передали нашему приватному свойству)
+    }
 
-        public string ValidFilePath(string path)
+    public string ValidFilePath(string path)
+    {
+        while (!File.Exists(path))
         {
-            while (!File.Exists(path))
+            _consoleWriter.PrintLine($"Файл {path} не существует.");
+            _consoleWriter.Print("Хотите создать новый файл с таким именем? (y/n): ");
+            var response = _consoleWriter.Read();
+            if (response == "y")
             {
-                Console.WriteLine($"Файл {path} не существует.");
-                Console.Write("Хотите создать новый файл с таким именем? (y/n): ");
-                var response = Console.ReadLine();
-                if (response == "y")
-                {
-                    using FileStream fs = File.Create(path);
-                    Console.WriteLine($"Файл {path} успешно создан.");
-                }
-                else
-                {
-                    Console.Write("Введите другое название файла: ");
-                    path = Console.ReadLine();
-                }
+                using FileStream fs = File.Create(path);
+                _consoleWriter.PrintLine($"Файл {path} успешно создан.");
             }
-
-            return path;
-        }
-
-        public JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
-        {
-            WriteIndented = true,
-            ReferenceHandler = ReferenceHandler.Preserve,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        };
-
-        public void FileSerialize(string path)
-        {
-            try
+            else
             {
-                path = ValidFilePath(path);
-
-                var json = JsonSerializer.Serialize(Workers, jsonSerializerOptions);
-                File.WriteAllText(path, json, Encoding.UTF8);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при сериализации в файл {path}: {ex.Message}");
+                _consoleWriter.Print("Введите другое название файла: ");
+                path = _consoleWriter.Read();
             }
         }
 
-        public List<Worker> FileDeserialize(string path)
+        return path;
+    }
+
+    public JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+    {
+        WriteIndented = true,
+        ReferenceHandler = ReferenceHandler.Preserve,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
+    public void FileSerialize(string path, List<Worker> worker)
+    {
+        try
         {
-            try
-            {
-                path = ValidFilePath(path);
+            path = ValidFilePath(path);
 
-                string textJson = File.ReadAllText(path);
-
-                var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
-
-                Console.WriteLine($"Файл {path} успешно прочитан, данные загружены.");
-
-                return workers;
-            }
-            catch (JsonException e)
-            {
-                Console.WriteLine($"Ошибка: {e.Message}");
-            }
-            return null;
+            var json = JsonSerializer.Serialize(worker, jsonSerializerOptions);
+            File.WriteAllText(path, json, Encoding.UTF8);
         }
+        catch (Exception ex)
+        {
+            _consoleWriter.PrintLine($"Ошибка при сериализации в файл {path}: {ex.Message}");
+        }
+    }
+
+    public List<Worker> FileDeserialize(string path)
+    {
+        try
+        {
+            path = ValidFilePath(path);
+
+            string textJson = File.ReadAllText(path);
+
+            var workers = JsonSerializer.Deserialize<List<Worker>>(textJson, jsonSerializerOptions);
+
+            _consoleWriter.PrintLine($"Файл {path} успешно прочитан, данные загружены.");
+
+            return workers;
+        }
+        catch (JsonException e)
+        {
+            _consoleWriter.PrintLine($"Ошибка: {e.Message}");
+        }
+        return null;
     }
 }

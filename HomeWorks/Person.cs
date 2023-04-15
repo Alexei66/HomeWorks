@@ -2,24 +2,25 @@
 {
     public struct Person
     {
-        static Random random = new Random();
+        private static Random random = new Random();
         private string name;
         private string lastName;
         private int age;
         private Guid id = Guid.NewGuid();
-        private DateTime dateCreation = DateTime.Now - new TimeSpan(days: random.Next(30), hours:0, minutes:0, seconds:0);
+        private DateTime dateCreation = DateTime.Now - new TimeSpan(days: random.Next(30), hours: 0, minutes: 0, seconds: 0);
 
         public string Name
         {
             get
             {
-                return name;    
+                return name;
             }
             set
             {
-                name = value; 
+                name = value;
             }
         }
+
         public string LastName
         {
             get
@@ -67,7 +68,6 @@
                 dateCreation = value;
             }
         }
-        
 
         public string Print()
         {
