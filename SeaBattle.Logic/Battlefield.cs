@@ -1,21 +1,27 @@
 ﻿using SeaBattle.Logic.Ships;
-using System.Collections.Generic;
 using System.Text;
 
 namespace SeaBattle.Logic;
 
 public class Battlefield
 {
-    public Dictionary<Point, ShipPoint> Points { get; set; }
-
     public Battlefield(int size)
     {
-        if (size % 2 == 0)
+        if (size % 2 != 0)  // size % 2 == 0
         {
-            Initialization(size + 1);
+            Initialization(size); // size+1
         }
-        else Console.WriteLine("Не четное");
-        //TODO проверку на четность для size
+        else throw new Exception("четное число");
+    }
+
+    public Dictionary<Point, ShipPoint> Points { get; set; }
+
+    public List<Ship> Ships
+    {
+        get => Points.Where(x => x.Value.Ship != null)
+            .Select(x => x.Value.Ship)
+            .Distinct()
+            .ToList();
     }
 
     public void AddShip(Point startPosition, Point finishPosition, Ship ship)
@@ -36,6 +42,11 @@ public class Battlefield
         }
     }
 
+    public void AddShip(Point startPosition, Ship ship)
+    {
+        AddShip(startPosition, startPosition, ship);
+    }
+
     //возвращаемый_тип this[Тип параметр1, ...]
     //{
     //    get { ... }
@@ -51,50 +62,55 @@ public class Battlefield
         }
     }
 
+    public bool DeleteShip(Guid shipId)
+    {
+        var shipPoint = Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList();
+
+        if (shipPoint)
+        {
+            foreach (var point in shipPoint)
+            {
+                point.Value.Ship = null;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+        //вызываешь Where и проверяешь, если там хоть что - то...
+        //Если пусто -кидаешь исключение или возвращаешь false(что лучше)
+        //Если не пусто - удаляешь корабль
+
+        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList().ForEach(x => x.Value.Ship = null);
+
+        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id != shipId).ToList();
+    }
+
     public string Print()
     {
         var sb = new StringBuilder();
 
-        List<ShipPoint> sortedShips = Sort();
+        List<ShipPoint> sortedShipPoints = Sort();
 
-        foreach (var ship in sortedShips)
+        foreach (var ship in sortedShipPoints)
         {
-            sb.AppendLine($" X = {ship.Point.X}  Y = {ship.Point.Y} Distance = {ship.Distance} Type - {ship.Ship.GetType().Name}");
-            //sb.Append( ship.Point.Y.ToString() );
-            //sb.AppendLine(ship.Ship.GetType().Name.ToString());
-            //sb.AppendLine(ship.Value.Distance.ToString());
+            sb.AppendLine(ship.Print());
         }
 
         return sb.ToString();
-
-        // По сути, ты выводишь состояние конкретного ShipPoint
-        //Т.е.сам ШипПоинт должен давать эту инфу, а не батлфилд
     }
 
     //TODO посмотреть про метод расширения
 
     private List<ShipPoint> Sort()
     {
-        //TODO вывести все ShipPoint в которых есть корабль. через методы linq
-
-        //var test = Points.Where(x => x.Value.Ship != null).ToList();
-
-        var sort = Points.Where(x => x.Value.Ship != null).
-            OrderBy(x => x.Value.Ship.Id).
-            OrderBy(x => x.Value.Distance).
-            Select(x => x.Value).
-            DistinctBy(x => x.Ship).ToList();
-        return sort;
-
-        //Select(x => x.Value).ToList().
-        //DistinctBy(x => x.Ship).ToList();
-
-        //DistinctBy(x => x.Value).ToList().
-        //Select(x => x.Value.Ship).ToList();
-
-        //TODO сортировать полученные ShipPoint по растоянию до центра через методы linq
-
-        //TODO выдать список кораблей
+        return Points.Where(x => x.Value.Ship != null)
+            .OrderBy(x => x.Value.Distance)
+            .Select(x => x.Value)
+            .DistinctBy(x => x.Ship)
+            .ToList();
     }
 
     private void Initialization(int pointSize)

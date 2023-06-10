@@ -1,4 +1,5 @@
 ﻿using SeaBattle.Logic.Ships;
+using System.Linq;
 
 namespace SeaBattle.Logic;
 
@@ -14,8 +15,10 @@ public class ShipPoint
     public Point Point { get; set; }
     public Ship Ship { get; set; }
 
-    public double Distance
-    { get; }
+    public double Distance { get; }
 
-    //TODO посчитать расстояние до центра
+    public string Print()
+    {
+        return $"X = {Point.X}  Y = {Point.Y} Distance = {Distance} Type - {Ship.GetType().Name}";
+    }
 }

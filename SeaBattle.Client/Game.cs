@@ -7,7 +7,7 @@ internal class Game
 {
     private static void Main(string[] args)
     {
-        var battlefield = new Battlefield(8);
+        var battlefield = new Battlefield(3);
         //Console.WriteLine(battlefield.Print());
 
         //var points1 = battlefield.GetPoints(new Point(-2, 0), new Point(2, 0));   // 5 точек
@@ -25,19 +25,19 @@ internal class Game
 
         // Console.WriteLine(sp.Distance);
 
-        try
-        {
-            battlefield.AddShip(new Point(0, 0), new Point(2, 0), sh);
-            battlefield.AddShip(new Point(-1, -1), new Point(1, -1), sh3);
-            battlefield.AddShip(new Point(0, 2), new Point(2, 2), sh2);
-            battlefield.AddShip(new Point(0, 4), new Point(2, 4), sh1);
-            //battlefield.Sort();
-            Console.WriteLine(battlefield.Print());
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        //try
+        //{
+        //    battlefield.AddShip(new Point(0, 0), new Point(2, 0), sh);
+        //    battlefield.AddShip(new Point(-1, -1), new Point(1, -1), sh3);
+        //    battlefield.AddShip(new Point(0, 2), new Point(2, 2), sh2);
+        //    battlefield.AddShip(new Point(0, 4), new Point(2, 4), sh1);
+        //    //battlefield.Sort();
+        //    Console.WriteLine(battlefield.Print());
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine(ex.Message);
+        //}
 
         var test = battlefield[Quadrant.IV, 1, 1];
         Console.WriteLine(test.ToString());
@@ -66,4 +66,4 @@ internal class Game
         //var mix = new Mixed();
         //mix.Move();
     }
-}//TODO поле 3х3
+}
