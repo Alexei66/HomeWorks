@@ -64,27 +64,25 @@ public class Battlefield
 
     public bool DeleteShip(Guid shipId)
     {
-        var shipPoint = Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList();
+        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList().ForEach(x => x.Value.Ship = null);
 
-        if (shipPoint)
-        {
-            foreach (var point in shipPoint)
-            {
-                point.Value.Ship = null;
-            }
-            return true;
-        }
-        else
+        var ships = Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId);
+
+        if (!ships.Any())
         {
             return false;
         }
 
-        //вызываешь Where и проверяешь, если там хоть что - то...
+        ships.ToList().ForEach(x => x.Value.Ship = null);
+
+        return true;
+
+        //вызываешь Where и проверяешь, если там хоть что-то ...
         //Если пусто -кидаешь исключение или возвращаешь false(что лучше)
         //Если не пусто - удаляешь корабль
 
         //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList().ForEach(x => x.Value.Ship = null);
-
+        //return true;
         //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id != shipId).ToList();
     }
 

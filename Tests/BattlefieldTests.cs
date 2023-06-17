@@ -177,14 +177,14 @@ namespace Tests
             var ship = new Military(1);
             var battlefield = this.CreateBattlefield(5);
             battlefield.AddShip(new Point(0, 0), ship);
-            var idShip = ship.Id;
+            var idShip = new Guid();
 
             // Act
             var result = battlefield.DeleteShip(idShip);
 
             // Assert
-            result.Should().BeTrue();
-            battlefield.Ships.Should().BeEmpty();
+            result.Should().BeFalse();
+            battlefield.Ships.Should().NotBeEmpty();
         }
 
         //TODO нет ID
