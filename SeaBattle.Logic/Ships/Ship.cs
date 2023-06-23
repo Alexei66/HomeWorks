@@ -2,10 +2,10 @@
 
 public abstract class Ship : IEquatable<Ship>
 {
-    protected Ship(int maxSpeed)
+    protected Ship(int maxSpeed, Guid id)
     {
         MaxSpeed = maxSpeed;
-        Id = Guid.NewGuid();
+        Id = id;
     }
 
     public abstract void Move();
@@ -18,10 +18,11 @@ public abstract class Ship : IEquatable<Ship>
     //{
     //    Console.WriteLine("я двигаюсь");
     //}
+    public ShipType Type { get; init; }
 
-    public int MaxSpeed { get; set; }
+    public int MaxSpeed { get; }
     public int Length { get; set; }
-    public Guid Id { get; set; }
+    public Guid Id { get; }
 
     /* Корабли считаются одинаковыми, если они относятся к одному типу, имеют одинаковую
      скорость и длину (для кораблей-отрезков). Сравнение кораблей должно осуществляться с

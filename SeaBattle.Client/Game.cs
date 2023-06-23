@@ -1,4 +1,5 @@
 ﻿using SeaBattle.Logic;
+using SeaBattle.Logic.DB;
 using SeaBattle.Logic.Ships;
 
 namespace SeaBattle.Client;
@@ -7,7 +8,7 @@ internal class Game
 {
     private static void Main(string[] args)
     {
-        var battlefield = new Battlefield(3);
+        var battlefield = new Battlefield(15);
         //Console.WriteLine(battlefield.Print());
 
         //var points1 = battlefield.GetPoints(new Point(-2, 0), new Point(2, 0));   // 5 точек
@@ -15,15 +16,21 @@ internal class Game
         //var points3 = battlefield.GetPoints(new Point(0, 0), new Point(-2, -2));
         //var points4 = battlefield.GetPoints(new Point(0, 2), new Point(0, -2)); //5 точка
 
-        var sh = new Military(20);
-        var sh3 = new Military(20);
-        var sh1 = new Mixed(20);
-        var sh2 = new Support(20);
+        //var sh = new Military(20);
+
         //Console.WriteLine(sh == sh2); //t
         //Console.WriteLine(sh.Equals(sh2)); //t
         //Console.WriteLine(sh.GetHashCode() == sh2.GetHashCode()); //t
+        var connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=D:\\desk\\testc\\SeaBattle.Logic\\DB\\Database1.mdf;Integrated Security=True";
+        var sdb = new SqlShipRepository(connectionString);
+        //var shipMilitary = sdb.GetById(1);
+        //var shipMixed = sdb.GetById(2);
+        //var shipSupport = sdb.GetById(3);
 
-        // Console.WriteLine(sp.Distance);
+        sdb.Create(new Mixed(66, Guid.NewGuid())
+        {
+            Length = 10
+        });
 
         //try
         //{

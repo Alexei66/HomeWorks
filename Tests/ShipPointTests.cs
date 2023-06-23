@@ -9,7 +9,7 @@ public class ShipPointTests
     public void Print_WhenSPExist_ShouldReturnValidState()
     {
         // Arrange
-        var shipPoint = new ShipPoint(new Point(0, 0), new Military(1));
+        var shipPoint = new ShipPoint(new Point(0, 0), new Military(1, Guid.NewGuid()));
 
         // Act
 

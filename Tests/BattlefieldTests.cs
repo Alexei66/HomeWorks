@@ -54,7 +54,7 @@ namespace Tests
             var battlefield = this.CreateBattlefield(11);
             Point startPosition = new Point(-1, 0);
             Point finishPosition = new Point(-1, 1);
-            Ship ship = new Military(20);
+            Ship ship = new Military(20, Guid.NewGuid());
 
             // Act
             battlefield.AddShip(
@@ -75,7 +75,7 @@ namespace Tests
             var battlefield = this.CreateBattlefield(11);
             Point startPosition = new Point(0, 0);
 
-            Ship ship = new Military(20);
+            Ship ship = new Military(20, Guid.NewGuid());
 
             // Act
             battlefield.AddShip(startPosition, ship);
@@ -108,7 +108,7 @@ namespace Tests
             // Arrange
             var battlefield = this.CreateBattlefield(5);
 
-            Ship ship = new Military(20);
+            Ship ship = new Military(20, Guid.NewGuid());
             battlefield.AddShip(new Point(0, 0), new Point(0, 0), ship);
             // Act
             var act = () => battlefield.AddShip(
@@ -126,7 +126,7 @@ namespace Tests
             // Arrange
 
             var point = new Point(0, 0);
-            var ship = new Military(20);
+            var ship = new Military(20, Guid.NewGuid());
             var sp = new ShipPoint(point, ship);
             var sb = new StringBuilder();
 
@@ -158,7 +158,7 @@ namespace Tests
         public void DeleteShip_WhenShipDeleted_ShouldReturnTrue()
         {
             // Arrange
-            var ship = new Military(1);
+            var ship = new Military(1, Guid.NewGuid());
             var battlefield = this.CreateBattlefield(5);
             battlefield.AddShip(new Point(0, 0), ship);
             var idShip = ship.Id;
@@ -174,7 +174,7 @@ namespace Tests
         public void DeleteShip_WhenShipDeleted_ShouldReturnFalse()
         {
             // Arrange
-            var ship = new Military(1);
+            var ship = new Military(1, Guid.NewGuid());
             var battlefield = this.CreateBattlefield(5);
             battlefield.AddShip(new Point(0, 0), ship);
             var idShip = new Guid();
@@ -198,7 +198,7 @@ namespace Tests
             var battlefield = this.CreateBattlefield(11);
             Point startPosition = new Point(0, 0);
 
-            Ship ship = new Military(20);
+            Ship ship = new Military(20, Guid.NewGuid());
 
             // Act
             battlefield.AddShip(startPosition, ship);

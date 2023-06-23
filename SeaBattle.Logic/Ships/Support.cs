@@ -4,8 +4,9 @@ namespace SeaBattle.Logic.Ships;
 
 public class Support : Ship, IRepairable
 {
-    public Support(int maxSpeed) : base(maxSpeed)
+    public Support(int maxSpeed, Guid id) : base(maxSpeed, id)
     {
+        Type = ShipType.Support;
     }
 
     public override void Move()

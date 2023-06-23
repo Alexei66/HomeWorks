@@ -4,8 +4,9 @@ namespace SeaBattle.Logic.Ships;
 
 public class Military : Ship, IShootable
 {
-    public Military(int maxSpeed) : base(maxSpeed)
+    public Military(int maxSpeed, Guid id) : base(maxSpeed, id)
     {
+        Type = ShipType.Military;
     }
 
     public override void Move()

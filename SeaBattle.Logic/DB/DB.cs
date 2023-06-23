@@ -1,5 +1,4 @@
-﻿using SeaBattle.Logic.Ships;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace SeaBattle.Logic.DB;
 
