@@ -1,4 +1,5 @@
 ﻿using SeaBattle.Logic.Ships;
+using System.Data;
 using System.Data.SqlClient;
 using System.Reflection.PortableExecutable;
 using System.Xml;
@@ -60,6 +61,7 @@ public class SqlShipRepository : IShipDBRepository
     public void Update(Ship ship)
     {
         throw new NotImplementedException();
+        //МЕНЯТЬ ПАРАМЕТРЫ ДЛЯ КОРАБЛЯ
     }
 
     public bool Delete(Guid shipId)
@@ -91,6 +93,42 @@ public class SqlShipRepository : IShipDBRepository
 
             return command.ExecuteNonQuery() > 0;
         }
+    }
+
+    public void MultipleInsert(IEnumerable<Ship> ships)
+    {
+        using SqlConnection connection = new SqlConnection(connectionString);
+        connection.Open();
+        var maxId = 0;
+        var command = "SELECT MAX(Id) FROM ShipDB";
+        var sqlCommand = new SqlCommand(command, connection);
+        var result = sqlCommand.ExecuteScalar();
+        maxId = result is DBNull ? 0 : (int)result;
+        using SqlBulkCopy bulkCopy = new SqlBulkCopy(connection.ConnectionString, SqlBulkCopyOptions.KeepIdentity);
+        bulkCopy.DestinationTableName = "ShipDB";
+
+        // Define column mappings if necessary
+        //bulkCopy.ColumnMappings.Add("SourceColumn1", "DestinationColumn1");
+        //bulkCopy.ColumnMappings.Add("SourceColumn2", "DestinationColumn2");
+
+        // Prepare your data (e.g., using a DataTable)
+        DataTable data = new DataTable();
+        data.Columns.Add("Id", typeof(int));
+        data.Columns.Add("IdShip", typeof(Guid));
+        data.Columns.Add("MaxSpeedShip", typeof(int));
+        data.Columns.Add("LengthShip", typeof(int));
+        data.Columns.Add("TypeShip", typeof(int));
+
+        foreach (var ship in ships)
+        {
+            data.Rows.Add(++maxId, ship.Id, ship.MaxSpeed, ship.Length, ship.Type);
+
+            //data.Rows.Add(5, "Value2");
+        }
+        // Add rows to the data table
+
+        // Add the rows to the SQLBulkInsert object
+        bulkCopy.WriteToServer(data);
     }
 
     private Ship CreateShipFromDB(SqlDataReader reader)

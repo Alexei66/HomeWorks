@@ -16,23 +16,39 @@ internal class Game
         //var points3 = battlefield.GetPoints(new Point(0, 0), new Point(-2, -2));
         //var points4 = battlefield.GetPoints(new Point(0, 2), new Point(0, -2)); //5 точка
 
-        //var sh = new Military(20);
-
         //Console.WriteLine(sh == sh2); //t
         //Console.WriteLine(sh.Equals(sh2)); //t
         //Console.WriteLine(sh.GetHashCode() == sh2.GetHashCode()); //t
 
-        var connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=D:\\desk\\testc\\SeaBattle.Logic\\DB\\Database1.mdf;Integrated Security=True";
+        var connectionString = "Data Source=(localdb)\\MSSQLLocalDb;Initial Catalog=SeaBattle;Integrated Security=True"; //Initial Catalog=ShipDB; User=shipAdmin;Password=shipAdmin
+
         var sdb = new SqlShipRepository(connectionString);
 
-        //var shipMilitary = sdb.GetById(1);
-        //var shipMixed = sdb.GetById(2);
-        //var shipSupport = sdb.GetById(3);
-
+        var shipList = new List<Ship>
+        {
+            new Military(20,Guid.NewGuid())
+            {
+                Length=1
+            },
+            new Support(100,Guid.NewGuid())
+            {
+                Length=10
+            },
+            new Mixed(10,Guid.NewGuid())
+            {
+                Length=16
+            },
+        };
         //sdb.Create(new Mixed(66, Guid.NewGuid())
         //{
         //    Length = 10
         //});
+
+        sdb.MultipleInsert(shipList);
+        //var shipMilitary = sdb.GetById(1);
+        //var shipMixed = sdb.GetById(2);
+        //var shipSupport = sdb.GetById(3);
+
         var list = sdb.GetAllShip();
 
         //try
