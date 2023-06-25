@@ -2,15 +2,15 @@
 
 namespace SeaBattle.Logic.DB;
 
-internal interface IShipDBRepository
+public interface IShipDBRepository
 {
     Ship GetById(int id);
 
-    void Save(Ship ship);
+    List<Ship> GetAllShip();
 
-    void Create(Ship ship);
+    bool Create(Ship ship);
 
     void Update(Ship ship);
 
-    void Delete(Guid ship);
+    bool Delete(Guid ship);
 }

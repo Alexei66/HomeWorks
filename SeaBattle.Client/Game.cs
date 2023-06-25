@@ -21,16 +21,19 @@ internal class Game
         //Console.WriteLine(sh == sh2); //t
         //Console.WriteLine(sh.Equals(sh2)); //t
         //Console.WriteLine(sh.GetHashCode() == sh2.GetHashCode()); //t
+
         var connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=D:\\desk\\testc\\SeaBattle.Logic\\DB\\Database1.mdf;Integrated Security=True";
         var sdb = new SqlShipRepository(connectionString);
+
         //var shipMilitary = sdb.GetById(1);
         //var shipMixed = sdb.GetById(2);
         //var shipSupport = sdb.GetById(3);
 
-        sdb.Create(new Mixed(66, Guid.NewGuid())
-        {
-            Length = 10
-        });
+        //sdb.Create(new Mixed(66, Guid.NewGuid())
+        //{
+        //    Length = 10
+        //});
+        var list = sdb.GetAllShip();
 
         //try
         //{
@@ -46,24 +49,24 @@ internal class Game
         //    Console.WriteLine(ex.Message);
         //}
 
-        var test = battlefield[Quadrant.IV, 1, 1];
-        Console.WriteLine(test.ToString());
-        var points = new Point[]
-        {
-            new Point(1,1),
-            new Point(-1,1),
-            new Point(-1,-1),
-            new Point(1,-1),
-            new Point(0,1),
-            new Point(-1,0),
-            new Point(0,-1),
-            new Point(1,0),
-            new Point(0,0),
-        };
-        foreach (var point in points)
-        {
-            Console.WriteLine(point.Print());
-        }
+        //var test = battlefield[Quadrant.IV, 1, 1];
+        //Console.WriteLine(test.ToString());
+        //var points = new Point[]
+        //{
+        //    new Point(1,1),
+        //    new Point(-1,1),
+        //    new Point(-1,-1),
+        //    new Point(1,-1),
+        //    new Point(0,1),
+        //    new Point(-1,0),
+        //    new Point(0,-1),
+        //    new Point(1,0),
+        //    new Point(0,0),
+        //};
+        //foreach (var point in points)
+        //{
+        //    Console.WriteLine(point.Print());
+        //}
 
         //var mil = new Military();
         //mil.Shoot();
