@@ -10,7 +10,7 @@ public interface IShipDBRepository
 
     bool Create(Ship ship);
 
-    void Update(Ship ship);
+    bool Update(Ship ship, int id);
 
     bool Delete(Guid ship);
 }

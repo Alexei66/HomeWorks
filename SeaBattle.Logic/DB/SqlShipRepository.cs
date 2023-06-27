@@ -58,9 +58,23 @@ public class SqlShipRepository : IShipDBRepository
         }
     }
 
-    public void Update(Ship ship)
+    public bool Update(Ship ship, int id)
     {
-        throw new NotImplementedException();
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            connection.Open();
+
+            SqlCommand command = new SqlCommand
+            ("UPDATE [ShipDB] SET MaxSpeedShip = @MaxSpeed, IdShip = @IdGuid, LengthShip = @Length, TypeShip = @Type  WHERE Id=@id", connection);
+
+            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@MaxSpeed", ship.MaxSpeed);
+            command.Parameters.AddWithValue("@IdGuid", ship.Id);
+            command.Parameters.AddWithValue("@Length", ship.Length);
+            command.Parameters.AddWithValue("@Type", ship.Type);
+
+            return command.ExecuteNonQuery() > 0;
+        }
         //МЕНЯТЬ ПАРАМЕТРЫ ДЛЯ КОРАБЛЯ
     }
 
@@ -99,11 +113,13 @@ public class SqlShipRepository : IShipDBRepository
     {
         using SqlConnection connection = new SqlConnection(connectionString);
         connection.Open();
+
         var maxId = 0;
         var command = "SELECT MAX(Id) FROM ShipDB";
         var sqlCommand = new SqlCommand(command, connection);
         var result = sqlCommand.ExecuteScalar();
         maxId = result is DBNull ? 0 : (int)result;
+
         using SqlBulkCopy bulkCopy = new SqlBulkCopy(connection.ConnectionString, SqlBulkCopyOptions.KeepIdentity);
         bulkCopy.DestinationTableName = "ShipDB";
 

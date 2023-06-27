@@ -24,6 +24,13 @@ internal class Game
 
         var sdb = new SqlShipRepository(connectionString);
 
+        var shp = new Military(17, Guid.NewGuid())
+        {
+            Length = 15
+        };
+
+        sdb.Update(shp, 2);
+
         var shipList = new List<Ship>
         {
             new Military(20,Guid.NewGuid())
