@@ -8,7 +8,12 @@ internal class Game
 {
     private static void Main(string[] args)
     {
-        var battlefield = new Battlefield(15);
+        var connectionString = "Data Source=(localdb)\\MSSQLLocalDb;Initial Catalog=SeaBattle;Integrated Security=True"; //Initial Catalog=ShipDB; User=shipAdmin;Password=shipAdmin
+        var sdb = new SqlShipRepository(connectionString);
+
+        var pointTable = new PointDBRepository(connectionString);
+
+        var battlefield = new Battlefield(15, sdb);
         //Console.WriteLine(battlefield.Print());
 
         //var points1 = battlefield.GetPoints(new Point(-2, 0), new Point(2, 0));   // 5 точек
@@ -19,44 +24,49 @@ internal class Game
         //Console.WriteLine(sh == sh2); //t
         //Console.WriteLine(sh.Equals(sh2)); //t
         //Console.WriteLine(sh.GetHashCode() == sh2.GetHashCode()); //t
+        var np = new Point(-2, 0);
 
-        var connectionString = "Data Source=(localdb)\\MSSQLLocalDb;Initial Catalog=SeaBattle;Integrated Security=True"; //Initial Catalog=ShipDB; User=shipAdmin;Password=shipAdmin
+        //pointTable.Create(np);
+        //pointTable.Create(new Point(2, 0));
+        //pointTable.Create(new Point(0, 0));
+        //pointTable.Create(new Point(0, 2));
+        //pointTable.Create(new Point(0, -2));
 
-        var sdb = new SqlShipRepository(connectionString);
+        var pointList = pointTable.GetPoint(np);
 
-        var shp = new Military(17, Guid.NewGuid())
-        {
-            Length = 15
-        };
+        //var shp = new Military(17, Guid.NewGuid())
+        //{
+        //    Length = 15
+        //};
 
-        sdb.Update(shp, 2);
+        //sdb.Update(shp, 2);
 
-        var shipList = new List<Ship>
-        {
-            new Military(20,Guid.NewGuid())
-            {
-                Length=1
-            },
-            new Support(100,Guid.NewGuid())
-            {
-                Length=10
-            },
-            new Mixed(10,Guid.NewGuid())
-            {
-                Length=16
-            },
-        };
+        //var shipList = new List<Ship>
+        //{
+        //    new Military(20,Guid.NewGuid())
+        //    {
+        //        Length=1
+        //    },
+        //    new Support(100,Guid.NewGuid())
+        //    {
+        //        Length=10
+        //    },
+        //    new Mixed(10,Guid.NewGuid())
+        //    {
+        //        Length=16
+        //    },
+        //};
         //sdb.Create(new Mixed(66, Guid.NewGuid())
         //{
         //    Length = 10
         //});
 
-        sdb.MultipleInsert(shipList);
+        //sdb.MultipleInsert(shipList);
         //var shipMilitary = sdb.GetById(1);
         //var shipMixed = sdb.GetById(2);
         //var shipSupport = sdb.GetById(3);
 
-        var list = sdb.GetAllShip();
+        //var list = sdb.GetAllShips();
 
         //try
         //{

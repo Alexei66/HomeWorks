@@ -6,7 +6,7 @@ public interface IShipDBRepository
 {
     Ship GetById(int id);
 
-    List<Ship> GetAllShip();
+    List<Ship> GetAllShips();
 
     bool Create(Ship ship);
 

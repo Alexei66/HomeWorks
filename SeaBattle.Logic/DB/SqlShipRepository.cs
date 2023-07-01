@@ -1,8 +1,6 @@
 ﻿using SeaBattle.Logic.Ships;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.PortableExecutable;
-using System.Xml;
 
 namespace SeaBattle.Logic.DB;
 
@@ -36,7 +34,7 @@ public class SqlShipRepository : IShipDBRepository
         }
     }
 
-    public List<Ship> GetAllShip()
+    public List<Ship> GetAllShips()
     {
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
@@ -75,7 +73,6 @@ public class SqlShipRepository : IShipDBRepository
 
             return command.ExecuteNonQuery() > 0;
         }
-        //МЕНЯТЬ ПАРАМЕТРЫ ДЛЯ КОРАБЛЯ
     }
 
     public bool Delete(Guid shipId)

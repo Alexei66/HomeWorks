@@ -1,6 +1,4 @@
-﻿using System.Threading.Channels;
-
-namespace SeaBattle.Logic;
+﻿namespace SeaBattle.Logic;
 
 public struct Point
 {
@@ -50,10 +48,6 @@ public struct Point
         {
             return Quadrant.III | Quadrant.IV;
         }
-        //else
-        //{
-        //    return Quadrant.None;
-        //}
     }
 
     public Quadrant Quadrant { get; }

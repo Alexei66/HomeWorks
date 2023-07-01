@@ -1,17 +1,23 @@
-﻿using SeaBattle.Logic.Ships;
+﻿using SeaBattle.Logic.DB;
+using SeaBattle.Logic.Ships;
 using System.Text;
 
 namespace SeaBattle.Logic;
 
 public class Battlefield
 {
-    public Battlefield(int size)
+    private readonly IShipDBRepository _shipRepository;
+
+    private readonly IPointDBRepository _pointDBRepository;
+
+    public Battlefield(int size, IShipDBRepository shipRepository)
     {
         if (size % 2 != 0)  // size % 2 == 0
         {
             Initialization(size); // size+1
         }
         else throw new Exception("четное число");
+        _shipRepository = shipRepository;
     }
 
     public Dictionary<Point, ShipPoint> Points { get; set; }
@@ -40,6 +46,8 @@ public class Battlefield
         {
             Points[point].Ship = ship;
         }
+
+        _shipRepository.Create(ship);
     }
 
     public void AddShip(Point startPosition, Ship ship)
@@ -64,8 +72,6 @@ public class Battlefield
 
     public bool DeleteShip(Guid shipId)
     {
-        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList().ForEach(x => x.Value.Ship = null);
-
         var ships = Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId);
 
         if (!ships.Any())
@@ -75,15 +81,11 @@ public class Battlefield
 
         ships.ToList().ForEach(x => x.Value.Ship = null);
 
-        return true;
+        return _shipRepository.Delete(shipId);
 
         //вызываешь Where и проверяешь, если там хоть что-то ...
         //Если пусто -кидаешь исключение или возвращаешь false(что лучше)
         //Если не пусто - удаляешь корабль
-
-        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id == shipId).ToList().ForEach(x => x.Value.Ship = null);
-        //return true;
-        //Points.Where(s => s.Value.Ship != null && s.Value.Ship.Id != shipId).ToList();
     }
 
     public string Print()
