@@ -13,7 +13,7 @@ internal class Game
 
         var pointTable = new PointDBRepository(connectionString);
 
-        var battlefield = new Battlefield(15, sdb);
+        var battlefield = new Battlefield(15, sdb, pointTable);
         //Console.WriteLine(battlefield.Print());
 
         //var points1 = battlefield.GetPoints(new Point(-2, 0), new Point(2, 0));   // 5 точек
@@ -24,7 +24,7 @@ internal class Game
         //Console.WriteLine(sh == sh2); //t
         //Console.WriteLine(sh.Equals(sh2)); //t
         //Console.WriteLine(sh.GetHashCode() == sh2.GetHashCode()); //t
-        var np = new Point(-2, 0);
+        //var np = new Point(-4, 0);
 
         //pointTable.Create(np);
         //pointTable.Create(new Point(2, 0));
@@ -32,7 +32,16 @@ internal class Game
         //pointTable.Create(new Point(0, 2));
         //pointTable.Create(new Point(0, -2));
 
-        var pointList = pointTable.GetPoint(np);
+        var pointList = new List<Point>
+        {
+            new Point(7,5),
+          //new Point(0,6),
+          //new Point(7,7),
+        };
+
+        pointTable.CreatePoints(pointList);
+
+        //var pointList = pointTable.GetPoint(np);
 
         //var shp = new Military(17, Guid.NewGuid())
         //{

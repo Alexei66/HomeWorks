@@ -8,5 +8,7 @@ public interface IPointDBRepository
 
     bool Create(Point point);
 
+    void CreatePoints(IEnumerable<Point> point);
+
     bool Delete(Point point);
 }

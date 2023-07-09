@@ -10,14 +10,16 @@ public class Battlefield
 
     private readonly IPointDBRepository _pointDBRepository;
 
-    public Battlefield(int size, IShipDBRepository shipRepository)
+    public Battlefield(int size, IShipDBRepository shipRepository, IPointDBRepository pointDBRepository)
     {
         if (size % 2 != 0)  // size % 2 == 0
         {
             Initialization(size); // size+1
         }
         else throw new Exception("четное число");
+
         _shipRepository = shipRepository;
+        _pointDBRepository = pointDBRepository;
     }
 
     public Dictionary<Point, ShipPoint> Points { get; set; }
@@ -130,6 +132,8 @@ public class Battlefield
             {
                 int x = -pointSize / 2 + col;
                 var point = new Point(x, y);
+
+                //_pointDBRepository.Create(point);
 
                 Points.Add(point, new ShipPoint(point, null));
             }
